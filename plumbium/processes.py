@@ -2,6 +2,8 @@ from image import Image
 from transform import Transform
 import mstools
 import niftyreg
+import niftyseg
+import steps
 
 
 def register(target, moved, transform=None, interpolate=False):
@@ -37,7 +39,51 @@ def register(target, moved, transform=None, interpolate=False):
 
 
 def bias_correct(input_file):
-    output_filename = '{0.basename}_biascorr'.format(input_file)
+    output_filename = '{0.basename}_biascorr.nii.gz'.format(input_file)
     mstools.bias_correct(input_file.filename, output_filename)
     bias_corrected_image = Image(output_filename)
     return bias_corrected_image
+
+
+def fill_lesions(input_file, lesions_file):
+    output_filename = '{0.basename}_lesions_filled.nii.gz'.format(input_file)
+    mstools.fill_lesions(input_file.filename, output_filename)
+    return Image(output_filename)
+
+
+def average_images(input_files):
+    input_basenames = [i.basename for i in input_files]
+    output_filename = '{0}_mean.nii.gz'.format('_'.join(input_basenames))
+    operations = [input_files[0].filename]
+    for i in input_files[1:]:
+        operations += [niftyseg.ADD, i.filename]
+    operations += [niftyseg.DIV, str(len(input_files))]
+    operations.append(output_filename)
+    niftyseg.seg_maths(*operations)
+    return Image(output_filename)
+
+
+def mask_image(input_file, mask_file):
+    output_filename = '{0.basename}_masked_with_{1.basename}.nii.gz'.format(
+        input_file,
+        mask_file
+    )
+    niftyseg.seg_maths(
+        input_file.filename,
+        niftyseg.MUL, mask_file.filename,
+        output_filename
+    )
+    return Image(output_filename)
+
+
+def steps_brain_extraction(input_file):
+    brain_filename = '{0}/{1.basename}_brain.nii.gz'.format(
+        steps.OUTPUT_DIR, input_file
+    )
+    brain_bin_filename = '{0}/{1.basename}_brain_bin.nii.gz'.format(
+        steps.OUTPUT_DIR, input_file
+    )
+    steps.steps(input_file.filename)
+    brain_file = Image(brain_filename)
+    brain_bin_file = Image(brain_bin_filename)
+    return brain_file, brain_bin_file
