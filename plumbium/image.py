@@ -1,3 +1,4 @@
+import os.path
 from analysis_file import AnalysisFile
 from utils import niigz_basename
 
@@ -8,4 +9,4 @@ class Image(AnalysisFile):
 
     @property
     def basename(self):
-        return niigz_basename(self.filename)
+        return niigz_basename(os.path.split(self.filename)[1])

@@ -7,7 +7,7 @@ def test_bias_correct(no_subprocess):
     input_filename = 'input.nii.gz'
     output_filename = 'output.nii.gz'
     expected_call = [
-        'python', mstools.BIASCORR,
+        mstools.BIASCORR,
         '-in', input_filename,
         '-out', output_filename
     ]
@@ -20,7 +20,7 @@ def test_fill_lesions(no_subprocess):
     lesion_filename = 'lesions.nii.gz'
     output_filename = 'output.nii.gz'
     expected_call = [
-        'python', mstools.NIFTK_FILL,
+        mstools.NIFTK_FILL,
         '-in', input_filename,
         '-lesion', lesion_filename,
         '-out', output_filename,

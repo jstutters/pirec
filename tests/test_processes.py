@@ -33,7 +33,7 @@ def test_bias_correct(no_subprocess):
         Image('b.nii.gz'),
         Image('c.nii.gz')
     ]
-    mean_image = processes.average_images(targets)
+    mean_image = processes.average_images(*targets)
     assert mean_image.filename == 'a_b_c_mean.nii.gz'
 
 

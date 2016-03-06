@@ -23,13 +23,13 @@ def register(target, moved, transform=None, interpolate=False):
         calculated_transform = Transform(affine_output_filename)
     else:
         if interpolate:
-            interpolation_scheme = 2
+            interpolation_scheme = niftyreg.SINC
         else:
-            interpolation_scheme = 0
+            interpolation_scheme = niftyreg.NEAREST_NEIGHBOUR
         niftyreg.reg_resample(
             target.filename,
             moved.filename,
-            transform,
+            transform.filename,
             registered_image_filename,
             interpolation_scheme
         )
@@ -47,11 +47,11 @@ def bias_correct(input_file):
 
 def fill_lesions(input_file, lesions_file):
     output_filename = '{0.basename}_lesions_filled.nii.gz'.format(input_file)
-    mstools.fill_lesions(input_file.filename, output_filename)
+    mstools.fill_lesions(input_file.filename, lesions_file.filename, output_filename)
     return Image(output_filename)
 
 
-def average_images(input_files):
+def average_images(*input_files):
     input_basenames = [i.basename for i in input_files]
     output_filename = '{0}_mean.nii.gz'.format('_'.join(input_basenames))
     operations = [input_files[0].filename]
@@ -87,3 +87,15 @@ def steps_brain_extraction(input_file):
     brain_file = Image(brain_filename)
     brain_bin_file = Image(brain_bin_filename)
     return brain_file, brain_bin_file
+
+
+def make_mtr_map(mton_file, mtoff_file):
+    mtrmap_filename = 'mtrmap.nii.gz'
+    mstools.mtr(mton_file.filename, mtoff_file.filename, mtrmap_filename)
+    mtr_reg_tmpl = '{0}/{1.basename}_reg.nii.gz'
+    mtoff_reg_filename = mtr_reg_tmpl.format(mstools.MTR_REG_DIR, mtoff_file)
+    mton_reg_filename = mtr_reg_tmpl.format(mstools.MTR_REG_DIR, mton_file)
+    mtrmap = Image(mtrmap_filename)
+    mtoff_midpoint = Image(mtoff_reg_filename)
+    mton_midpoint = Image(mton_reg_filename)
+    return mtrmap, mtoff_midpoint, mton_midpoint
