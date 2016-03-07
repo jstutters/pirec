@@ -1,4 +1,4 @@
-from checksum import file_sha1sum
+from utils import file_sha1sum
 
 
 class AnalysisFile(object):
