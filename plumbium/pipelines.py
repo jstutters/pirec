@@ -31,4 +31,3 @@ def mtr(t1, t2, t2_lesions, mton_short, mtoff_short, mton_long, mtoff_long):
         interpolate=False
     )
     mask_image(mtrmap, mask_aligned_mtr)
-    return mtrmap_brain
