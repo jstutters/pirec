@@ -1,4 +1,3 @@
-from functools import partial
 import processes as procs
 
 

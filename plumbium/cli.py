@@ -1,6 +1,7 @@
 import click
 import pipelines
 from pipelinerun import PipelineRun
+from image import Image
 
 
 @click.group()
