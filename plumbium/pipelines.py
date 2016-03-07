@@ -16,7 +16,7 @@ def fill_and_extract_brain(t1, t2, t2_lesions):
 
 
 def mtr(t1, t2, t2_lesions, mton_short, mtoff_short, mton_long, mtoff_long):
-    t1_bias_corr, _, _, brain_bin = procs.fill_and_extract_brain(t1, t2, t2_lesions)
+    t1_bias_corr, _, _, brain_bin = fill_and_extract_brain(t1, t2, t2_lesions)
     mton = procs.average_images(mton_short, mton_long)
     mtoff = procs.average_images(mtoff_short, mtoff_long)
     mtrmap, mtoff_midpoint, _ = procs.make_mtr_map(mton, mtoff)
