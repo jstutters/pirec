@@ -1,30 +1,56 @@
-import processes as procs
+from processresult import ProcessResult
+from processes import (
+    bias_correct, register, fill_lesions, steps_brain_extraction,
+    average_images, make_mtr_map, mask_image
+)
 
 
 def fill_and_extract_brain(t1, t2, t2_lesions):
-    t1_bias_correct = procs.bias_correct(t1)
-    t2_aligned_t1, t2_to_t1_transform = procs.register(t1_bias_correct, t2)
-    t2_lesions_aligned_t1, _ = procs.register(
-        t1_bias_correct,
+    bias_correct_output = bias_correct(t1)
+    t2_register_output = register(
+        bias_correct_output['bias_corrected_image'],
+        t2
+    )
+    t2_lesions_register_output = register(
+        bias_correct_output['bias_corrected_image'],
         t2_lesions,
-        t2_to_t1_transform,
+        transform=t2_register_output['calculated_transform'],
         interpolate=False
     )
-    t1_lesion_filled = procs.fill_lesions(t1_bias_correct, t2_lesions_aligned_t1)
-    brain, brain_bin = procs.steps_brain_extraction(t1_lesion_filled)
-    return t1_bias_correct, t1_lesion_filled, brain, brain_bin
+    fill_lesions_output = fill_lesions(
+        bias_correct_output['bias_corrected_image'],
+        t2_lesions_register_output['registered_image']
+    )
+    steps_output = steps_brain_extraction(
+        fill_lesions_output['lesion_filled_image']
+    )
+    return ProcessResult(
+        bias_corrected_t1=bias_correct_output['bias_corrected_image'],
+        lesion_filled_t1=fill_lesions_output['lesion_filled_image'],
+        extracted_brain=steps_output['brain'],
+        extracted_brain_bin=steps_output['brain_bin']
+    )
 
 
 def mtr(t1, t2, t2_lesions, mton_short, mtoff_short, mton_long, mtoff_long):
-    t1_bias_corr, _, _, brain_bin = fill_and_extract_brain(t1, t2, t2_lesions)
-    mton = procs.average_images(mton_short, mton_long)
-    mtoff = procs.average_images(mtoff_short, mtoff_long)
-    mtrmap, mtoff_midpoint, _ = procs.make_mtr_map(mton, mtoff)
-    t1_aligned_mtr, t1_to_mtr_transform = procs.register(mtoff_midpoint, t1_bias_corr)
-    mask_aligned_mtr, _ = procs.register(
-        mtoff_midpoint,
-        brain_bin,
-        t1_to_mtr_transform,
+    fill_and_extract_output = fill_and_extract_brain(t1, t2, t2_lesions)
+    mean_mton_output = average_images(mton_short, mton_long)
+    mean_mtoff_output = average_images(mtoff_short, mtoff_long)
+    mtr_map_output = make_mtr_map(
+        mean_mton_output['mean_image'],
+        mean_mtoff_output['mean_image']
+    )
+    t1_registration_output = register(
+        mtr_map_output['mtoff_midpoint'],
+        fill_and_extract_output['bias_corrected_t1']
+    )
+    brain_mask_registration_output = register(
+        mtr_map_output['mtoff_midpoint'],
+        fill_and_extract_output['brain_bin'],
+        t1_registration_output['calculated_transform'],
         interpolate=False
     )
-    procs.mask_image(mtrmap, mask_aligned_mtr)
+    mask_image(
+        mtr_map_output['mtr_map'],
+        brain_mask_registration_output['registered_image']
+    )
