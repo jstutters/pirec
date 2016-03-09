@@ -9,6 +9,9 @@ import sys
 
 
 class PipelineRecord(object):
+    def __init__(self):
+        self.results = []
+
     @contextmanager
     def begin(self, name, *input_files):
         self.results = []

@@ -96,7 +96,7 @@ def steps_brain_extraction(input_file):
     return brain_file, brain_bin_file
 
 
-@record_process('mtr_map, mtoff_midpoint, mton_midpoint')
+@record_process('mtr_map', 'mtoff_midpoint', 'mton_midpoint')
 def make_mtr_map(mton_file, mtoff_file):
     mtrmap_filename = 'mtrmap.nii.gz'
     mstools.mtr(mton_file.filename, mtoff_file.filename, mtrmap_filename)

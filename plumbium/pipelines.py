@@ -1,4 +1,3 @@
-from processresult import ProcessResult
 from processes import (
     bias_correct, register, fill_lesions, steps_brain_extraction,
     average_images, make_mtr_map, mask_image
@@ -24,12 +23,12 @@ def fill_and_extract_brain(t1, t2, t2_lesions):
     steps_output = steps_brain_extraction(
         fill_lesions_output['lesion_filled_image']
     )
-    return ProcessResult(
-        bias_corrected_t1=bias_correct_output['bias_corrected_image'],
-        lesion_filled_t1=fill_lesions_output['lesion_filled_image'],
-        extracted_brain=steps_output['brain'],
-        extracted_brain_bin=steps_output['brain_bin']
-    )
+    return {
+        'bias_corrected_t1': bias_correct_output['bias_corrected_image'],
+        'lesion_filled_t1': fill_lesions_output['lesion_filled_image'],
+        'brain': steps_output['brain'],
+        'brain_bin': steps_output['brain_bin']
+    }
 
 
 def mtr(t1, t2, t2_lesions, mton_short, mtoff_short, mton_long, mtoff_long):
