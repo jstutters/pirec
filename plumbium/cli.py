@@ -1,7 +1,7 @@
 import click
+from artefacts import Image
 import pipelines
-from pipelinerun import PipelineRun
-from image import Image
+from processresult import recorder
 
 
 @click.group()
@@ -14,13 +14,12 @@ def cli():
 @click.argument('t2', type=click.Path(exists=True, dir_okay=False))
 @click.argument('t2_lesions', type=click.Path(exists=True, dir_okay=False))
 def fill_and_extract_brain(t1, t2, t2_lesions):
-    fill_and_extract_run = PipelineRun(
-        pipelines.mtr,
+    recorder.run(
+        'fill_and_extract_brain',
+        pipelines.fill_and_extract_brain,
         Image(t1),
-        Image(t2),
-        Image(t2_lesions)
+        Image(t2)
     )
-    fill_and_extract_run.run()
 
 
 @cli.command()
@@ -32,7 +31,8 @@ def fill_and_extract_brain(t1, t2, t2_lesions):
 @click.argument('mton_long', type=click.Path(exists=True, dir_okay=False))
 @click.argument('mtoff_long', type=click.Path(exists=True, dir_okay=False))
 def mtr(t1, t2, t2_lesions, mton_short, mtoff_short, mton_long, mtoff_long):
-    mtr_run = PipelineRun(
+    recorder.run(
+        'mtr',
         pipelines.mtr,
         Image(t1),
         Image(t2),
@@ -42,7 +42,16 @@ def mtr(t1, t2, t2_lesions, mton_short, mtoff_short, mton_long, mtoff_long):
         Image(mton_long),
         Image(mtoff_long)
     )
-    mtr_run.run()
+
+
+@cli.command()
+@click.argument('input_file', type=click.Path(exists=True, dir_okay=False))
+def test(input_file):
+    recorder.run(
+        'test',
+        pipelines.test,
+        Image(input_file)
+    )
 
 
 if __name__ == '__main__':

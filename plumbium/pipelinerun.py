@@ -27,7 +27,7 @@ class PipelineRun(object):
     def save(self):
         archive_name = '{0}-{1}.tar'.format(
             self.pipeline.__name__,
-            self.start_date.strftime('%Y%m%d_%H:%M')
+            self.start_date.strftime('%Y%m%d_%H%M')
         )
         archive = TarFile(archive_name, 'w')
         archive.add(self.working_dir)

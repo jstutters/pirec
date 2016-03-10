@@ -1,6 +1,6 @@
 from processes import (
     bias_correct, register, fill_lesions, steps_brain_extraction,
-    average_images, make_mtr_map, mask_image
+    average_images, make_mtr_map, mask_image, test_process
 )
 
 
@@ -53,3 +53,7 @@ def mtr(t1, t2, t2_lesions, mton_short, mtoff_short, mton_long, mtoff_long):
         mtr_map_output['mtr_map'],
         brain_mask_registration_output['registered_image']
     )
+
+
+def test(input_file):
+    test_process(input_file.filename, 'some text')

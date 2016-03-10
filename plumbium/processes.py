@@ -1,6 +1,5 @@
 from processresult import record_process
-from image import Image
-from transform import Transform
+from artefacts import Image, Transform
 import mstools
 import niftyreg
 import niftyseg
@@ -107,3 +106,14 @@ def make_mtr_map(mton_file, mtoff_file):
     mtoff_midpoint = Image(mtoff_reg_filename)
     mton_midpoint = Image(mton_reg_filename)
     return mtrmap, mtoff_midpoint, mton_midpoint
+
+
+@record_process('result')
+def test_process(input_file, text):
+    with open(input_file, 'r') as r:
+        with open('test_out.txt', 'w') as w:
+            w.write(r.read())
+            w.write(text)
+    result = Image('test_out.txt')
+    print 'stdout from foo'
+    return result

@@ -1,6 +1,7 @@
 from contextlib import contextmanager
 import datetime
 from functools import wraps
+import json
 import os.path
 import shutil
 from tarfile import TarFile
@@ -10,36 +11,51 @@ import sys
 
 class PipelineRecord(object):
     def __init__(self):
+        self.debug = False
         self.results = []
 
-    @contextmanager
-    def begin(self, name, *input_files):
+    def run(self, name, pipeline, *input_files, **kwargs):
         self.results = []
+        self.debug = kwargs.get('debug', False)
         self.name = name
-        self.working_dir = tempfile.mkdtemp(prefix='plumbium')
-        self.input_files = input_files
-        for i in input_files:
-            shutil.copy(i.filename, self.working_dir)
-            i.filename = os.path.basename(i.filename)
         self.input_files = input_files
         self.launched_dir = os.getcwd()
+        self._copy_input_files_to_working_dir()
         self.start_date = datetime.datetime.now()
         os.chdir(self.working_dir)
-        yield
+        pipeline(*input_files)
         os.chdir(self.launched_dir)
         self.save()
-        for r in self.results:
-            print r
+
+    def _copy_input_files_to_working_dir(self):
+        self.working_dir = tempfile.mkdtemp(prefix='plumbium_{0}_'.format(self.name))
+        for i in self.input_files:
+            shutil.copy(i.filename, self.working_dir)
+            i.filename = os.path.basename(i.filename)
+
+    def _store_printed_output(self):
+        with open('printed_output.txt', 'w') as printed_output_record:
+            for r in self.results:
+                printed_output_record.write(r.output)
 
     def record(self, result):
         self.results.append(result)
 
     def save(self):
-        archive_name = '{0}-{1}.tar'.format(
+        results = {
+            'name': self.name,
+            'input_files': [repr(f) for f in self.input_files],
+            'dir': self.launched_dir,
+            'start_date': self.start_date.strftime('%Y%m%d %H:%M'),
+        }
+        results['processes'] = [r.as_dict() for r in self.results]
+        basename = '{0}-{1}'.format(
             self.name,
-            self.start_date.strftime('%Y%m%d_%H:%M')
+            self.start_date.strftime('%Y%m%d_%H%M')
         )
-        archive = TarFile(archive_name, 'w')
+        with open(basename + '.json', 'w') as f:
+            json.dump(results, f, indent=4, separators=(',', ': '))
+        archive = TarFile(basename + '.tar', 'w')
         archive.add(self.working_dir)
         archive.close()
 
@@ -67,7 +83,10 @@ def record_process(*output_names):
         @wraps(f)
         def process_recorder(*args, **kwargs):
             output_recorder = OutputRecorder()
-            with output_recorder.capture():
+            if not recorder.debug:
+                with output_recorder.capture():
+                    returned_images = f(*args, **kwargs)
+            else:
                 returned_images = f(*args, **kwargs)
             if type(returned_images) is not tuple:
                 returned_images = (returned_images,)
@@ -95,6 +114,15 @@ class ProcessOutput(object):
             r += ', '.join(['{0}={1!r}'.format(x) for x in self.input_kwargs])
         r += ')'
         return r
+
+    def as_dict(self):
+        return {
+            'function': self.function.__name__,
+            'input_args': [repr(x) for x in self.input_args],
+            'input_kwargs': {str(x[0]): repr(x[1]) for x in self.input_kwargs},
+            'printed_output': self.output,
+            'returned': [repr(r) for r in self._results.values()]
+        }
 
     def __getitem__(self, key):
         return self._results[key]
