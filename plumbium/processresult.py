@@ -56,7 +56,7 @@ class PipelineRecord(object):
         with open(basename + '.json', 'w') as f:
             json.dump(results, f, indent=4, separators=(',', ': '))
         archive = TarFile(basename + '.tar', 'w')
-        archive.add(self.working_dir)
+        archive.add(self.working_dir, arcname='')
         archive.close()
 
 
@@ -82,16 +82,16 @@ def record_process(*output_names):
     def decorator(f):
         @wraps(f)
         def process_recorder(*args, **kwargs):
-            output_recorder = OutputRecorder()
+            output_rec = OutputRecorder()
             if not recorder.debug:
-                with output_recorder.capture():
+                with output_rec.capture():
                     returned_images = f(*args, **kwargs)
             else:
                 returned_images = f(*args, **kwargs)
             if type(returned_images) is not tuple:
                 returned_images = (returned_images,)
             named_images = dict(zip(output_names, returned_images))
-            result = ProcessOutput(f, args, kwargs, output_recorder.record, **named_images)
+            result = ProcessOutput(f, args, kwargs, output_rec.record, **named_images)
             recorder.record(result)
             return result
         return process_recorder
