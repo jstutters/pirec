@@ -1,3 +1,4 @@
+from __future__ import print_function
 from contextlib import contextmanager
 import datetime
 from functools import wraps
@@ -6,6 +7,7 @@ import os.path
 import shutil
 from tarfile import TarFile
 import tempfile
+import traceback
 import sys
 
 
@@ -71,8 +73,10 @@ class OutputRecorder(object):
     def capture(self):
         current_stdout, current_stderr = sys.stdout, sys.stderr
         sys.stdout, sys.stderr = self, self
-        yield
-        sys.stdout, sys.stderr = current_stdout, current_stderr
+        try:
+            yield
+        finally:
+            sys.stdout, sys.stderr = current_stdout, current_stderr
 
     def write(self, data):
         self.record += data
@@ -83,15 +87,28 @@ def record_process(*output_names):
         @wraps(f)
         def process_recorder(*args, **kwargs):
             output_rec = OutputRecorder()
-            if not recorder.debug:
-                with output_rec.capture():
+            returned_images = None
+            exception = None
+            try:
+                if not recorder.debug:
+                    with output_rec.capture():
+                        returned_images = f(*args, **kwargs)
+                else:
                     returned_images = f(*args, **kwargs)
-            else:
-                returned_images = f(*args, **kwargs)
+            except Exception as e:
+                traceback.print_exc(file=sys.stderr)
+                exception = traceback.format_exc()
             if type(returned_images) is not tuple:
                 returned_images = (returned_images,)
             named_images = dict(zip(output_names, returned_images))
-            result = ProcessOutput(f, args, kwargs, output_rec.record, **named_images)
+            result = ProcessOutput(
+                func=f,
+                args=args,
+                kwargs=kwargs,
+                output=output_rec.record,
+                exception=exception,
+                **named_images
+            )
             recorder.record(result)
             return result
         return process_recorder
@@ -99,12 +116,13 @@ def record_process(*output_names):
 
 
 class ProcessOutput(object):
-    def __init__(self, function, input_args, input_kwargs, output, **output_images):
+    def __init__(self, func, args, kwargs, output, exception, **output_images):
         self._results = output_images
         self.output = output
-        self.function = function
-        self.input_args = input_args
-        self.input_kwargs = input_kwargs
+        self.function = func
+        self.input_args = args
+        self.input_kwargs = kwargs
+        self.exception = exception
 
     def __repr__(self):
         r = self.function.__name__ + '('
@@ -121,7 +139,8 @@ class ProcessOutput(object):
             'input_args': [repr(x) for x in self.input_args],
             'input_kwargs': {str(x[0]): repr(x[1]) for x in self.input_kwargs},
             'printed_output': self.output,
-            'returned': [repr(r) for r in self._results.values()]
+            'returned': [repr(r) for r in self._results.values()],
+            'exception': repr(self.exception)
         }
 
     def __getitem__(self, key):

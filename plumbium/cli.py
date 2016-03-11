@@ -62,5 +62,16 @@ def test(ctx, input_file):
     )
 
 
+@cli.command()
+@click.argument('input_file', type=click.Path(exists=True, dir_okay=False))
+@click.pass_context
+def fail_test(ctx, input_file):
+    recorder.run(
+        'test_failure',
+        pipelines.fail_test,
+        Image(input_file),
+        debug=ctx.obj['DEBUG']
+    )
+
 if __name__ == '__main__':
     cli()

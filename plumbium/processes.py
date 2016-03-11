@@ -1,3 +1,4 @@
+from __future__ import print_function
 from processresult import record_process
 from artefacts import Image, Transform
 import mstools
@@ -115,5 +116,13 @@ def test_process(input_file, text):
             w.write(r.read())
             w.write(text)
     result = Image('test_out.txt')
-    print 'stdout from foo'
+    print('stdout from foo')
+    return result
+
+
+@record_process('result')
+def test_failing_process(input_file, text):
+    result = Image('test_out.txt')
+    print('raising ioerror')
+    raise IOError
     return result
