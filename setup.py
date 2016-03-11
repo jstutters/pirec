@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='plumbium',
-    version='0.0.2',
+    version='0.0.3',
     packages=['plumbium'],
     zip_safe=True,
     install_requires=[
