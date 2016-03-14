@@ -1,3 +1,4 @@
+import os.path
 import subprocess
 
 STEPS_SCRIPT = '/analysis_tools/steps/steps.sh'
@@ -7,7 +8,7 @@ OUTPUT_DIR = 'steps_output'
 def steps(input_filename):
     call = [
         STEPS_SCRIPT,
-        input_filename,
+        os.path.abspath(input_filename),
         OUTPUT_DIR
     ]
     result = subprocess.check_output(call, stderr=subprocess.STDOUT)
