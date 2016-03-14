@@ -1,6 +1,6 @@
 import subprocess
 
-STEPS_SCRIPT = '/analysis_tools/steps/do_steps.sh'
+STEPS_SCRIPT = '/analysis_tools/steps/steps.sh'
 OUTPUT_DIR = 'steps_output'
 
 
