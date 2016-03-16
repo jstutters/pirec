@@ -44,10 +44,11 @@ def test_OutputRecorder_releases():
 
 
 def test_Pipeline_record(recorded_pipeline):
-    pipeline.run('test', recorded_pipeline)
-    print(pipeline.results)
-    assert pipeline.results[0].output == 'test output\n'
-    assert pipeline.results[0]['an_output'] == 'test_result'
+    with tmpdir.as_cwd():
+        pipeline.run('test', recorded_pipeline)
+        print(pipeline.results)
+        assert pipeline.results[0].output == 'test output\n'
+        assert pipeline.results[0]['an_output'] == 'test_result'
 
 
 def test_Pipeline_save(recorded_pipeline, tmpdir):
