@@ -6,16 +6,28 @@ class Artefact(object):
     def __init__(self, filename, extension):
         if not filename.endswith(extension):
             raise ValueError
-        self.filename = filename
+        self._filename = filename
         self._ext_length = len(extension)
+        self._abspath = os.path.abspath(filename)
 
     def checksum(self):
         return file_sha1sum(self.filename)
 
+    def exists(self):
+        return os.path.exists(self.filename)
+
+    @property
+    def abspath(self):
+        return self._abspath
+
     @property
     def basename(self):
         """Return the filename without the extension"""
-        return self.filename[:-self._ext_length]
+        return self._filename[:-self._ext_length]
+
+    @property
+    def filename(self):
+        return self._filename
 
     def __repr__(self):
         return 'Artefact({0!r})'.format(self.filename)
