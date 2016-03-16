@@ -11,7 +11,7 @@ import traceback
 import sys
 
 
-class PipelineRecord(object):
+class Pipeline(object):
     def __init__(self):
         self.debug = False
         self.results = []
@@ -62,7 +62,7 @@ class PipelineRecord(object):
         archive.close()
 
 
-recorder = PipelineRecord()
+pipeline = Pipeline()
 
 
 class OutputRecorder(object):
@@ -82,7 +82,7 @@ class OutputRecorder(object):
         self.record += data
 
 
-def record_process(*output_names):
+def record(*output_names):
     def decorator(f):
         @wraps(f)
         def process_recorder(*args, **kwargs):
@@ -90,12 +90,12 @@ def record_process(*output_names):
             returned_images = None
             exception = None
             try:
-                if not recorder.debug:
+                if not pipeline.debug:
                     with output_rec.capture():
                         returned_images = f(*args, **kwargs)
                 else:
                     returned_images = f(*args, **kwargs)
-            except Exception as e:
+            except:
                 traceback.print_exc(file=sys.stderr)
                 exception = traceback.format_exc()
             if type(returned_images) is not tuple:
@@ -109,7 +109,7 @@ def record_process(*output_names):
                 exception=exception,
                 **named_images
             )
-            recorder.record(result)
+            pipeline.record(result)
             return result
         return process_recorder
     return decorator
