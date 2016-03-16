@@ -3,17 +3,6 @@ import hashlib
 BUF_SIZE = 65536
 
 
-def niigz_basename(filename):
-    """Return the filename without extension of a .nii.gz file"""
-
-    if not filename.endswith('.nii.gz'):
-        raise ValueError
-    if filename[-7:] == '.nii.gz':
-        return filename[:-7]
-    else:
-        raise ValueError
-
-
 def file_sha1sum(filename):
     """Calculate the SHA-1 checksum of a file"""
 

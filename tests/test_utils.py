@@ -1,14 +1,4 @@
-import pytest
 from plumbium import utils
-
-
-def test_niigz_basename():
-    assert utils.niigz_basename('foo.nii.gz') == 'foo'
-
-
-def test_niigz_basename_bad_extension():
-    with pytest.raises(ValueError):
-        utils.niigz_basename('foo.txt')
 
 
 def test_file_sha1sum(tmpdir):

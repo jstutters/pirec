@@ -1,27 +1,38 @@
 import os.path
-from utils import file_sha1sum, niigz_basename
+from utils import file_sha1sum
 
 
-class AnalysisFile(object):
-    def __init__(self, filename):
+class Artefact(object):
+    def __init__(self, filename, extension):
+        if not filename.endswith(extension):
+            raise ValueError
         self.filename = filename
+        self._ext_length = len(extension)
 
     def checksum(self):
         return file_sha1sum(self.filename)
 
-
-class Image(AnalysisFile):
-    def __init__(self, filename):
-        super(Image, self).__init__(filename)
-
     @property
     def basename(self):
-        return niigz_basename(os.path.split(self.filename)[1])
+        """Return the filename without the extension"""
+        return self.filename[:-self._ext_length]
 
     def __repr__(self):
-        return 'Image({0!r})'.format(self.filename)
+        return 'Artefact({0!r})'.format(self.filename)
 
 
-class Transform(AnalysisFile):
+class NiiGzImage(Artefact):
     def __init__(self, filename):
-        super(Transform, self).__init__(filename)
+        super(NiiGzImage, self).__init__(filename, '.nii.gz')
+
+
+    def __repr__(self):
+        return '{0}({1!r})'.format(self.__clsname__, self.filename)
+
+
+class TextFile(Artefact):
+    def __init__(self, filename):
+        super(TextFile, self).__init__(filename, '.txt')
+
+    def __repr__(self):
+        return '{0}({1!r})'.format(self.__clsname__, self.filename)
