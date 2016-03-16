@@ -1,8 +1,12 @@
+## The following requirements were added by pip --freeze:
+coverage==4.0.3
 flake8==2.5.4
 mccabe==0.4.0
 pep8==1.7.0
--e git+git@github.com:jstutters/Plumbium.git@37a4ffa90620a941bc2f6b719b3c726c6c76d6aa#egg=plumbium
+-e git+git@github.com:jstutters/Plumbium.git@0357b2a276ae5bf988dd2e6cf89ee9cae2a14f57#egg=plumbium-master
 py==1.4.31
 pyflakes==1.0.0
 pytest==2.9.0
+pytest-cov==2.2.1
 wheel==0.24.0
+wsgiref==0.1.2
