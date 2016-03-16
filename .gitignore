@@ -63,4 +63,4 @@ target/
 
 *.tar
 *.json
-test_data/
+data_for_testing/
