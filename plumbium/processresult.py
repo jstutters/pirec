@@ -33,7 +33,7 @@ class Pipeline(object):
         self.working_dir = tempfile.mkdtemp(prefix='plumbium_{0}_'.format(self.name))
         for i in self.input_files:
             shutil.copy(i.filename, self.working_dir)
-            i.filename = os.path.basename(i.filename)
+            i.dereference()
 
     def _store_printed_output(self):
         with open('printed_output.txt', 'w') as printed_output_record:

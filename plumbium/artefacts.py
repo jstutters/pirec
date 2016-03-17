@@ -25,6 +25,9 @@ class Artefact(object):
         """Return the filename without the extension"""
         return self._filename[:-self._ext_length]
 
+    def dereference(self):
+        self._filename = os.path.basename(self._filename)
+
     @property
     def filename(self):
         return self._filename
@@ -36,7 +39,6 @@ class Artefact(object):
 class NiiGzImage(Artefact):
     def __init__(self, filename):
         super(NiiGzImage, self).__init__(filename, '.nii.gz')
-
 
     def __repr__(self):
         return '{0}({1!r})'.format(self.__clsname__, self.filename)
