@@ -34,7 +34,7 @@ class Pipeline(object):
         for i in self.input_files:
             shutil.copy(i.filename, self.working_dir)
             i.dereference()
-        print self.input_files
+        print(self.input_files)
 
     def _store_printed_output(self):
         with open('printed_output.txt', 'w') as printed_output_record:
