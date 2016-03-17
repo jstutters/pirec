@@ -33,7 +33,7 @@ class Artefact(object):
         return self._filename
 
     def __repr__(self):
-        return 'Artefact({0!r})'.format(self.filename)
+        return '{0}({1!r})'.format(self.__class__.__name__, self.filename)
 
 
 class NiiGzImage(Artefact):
@@ -41,7 +41,7 @@ class NiiGzImage(Artefact):
         super(NiiGzImage, self).__init__(filename, '.nii.gz')
 
     def __repr__(self):
-        return '{0}({1!r})'.format(self.__clsname__, self.filename)
+        return '{0}({1!r})'.format(self.__class__.__name__, self.filename)
 
 
 class TextFile(Artefact):
@@ -49,4 +49,4 @@ class TextFile(Artefact):
         super(TextFile, self).__init__(filename, '.txt')
 
     def __repr__(self):
-        return '{0}({1!r})'.format(self.__clsname__, self.filename)
+        return '{0}({1!r})'.format(self.__class__.__name__, self.filename)
