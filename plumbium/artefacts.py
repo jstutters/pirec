@@ -22,8 +22,8 @@ class Artefact(object):
 
     @property
     def basename(self):
-        """Return the filename without the extension"""
-        return self._filename[:-self._ext_length]
+        """Return the filename without the extension and directory components"""
+        return os.path.basename(self._filename)[:-self._ext_length]
 
     def dereference(self):
         self._filename = os.path.basename(self._filename)
