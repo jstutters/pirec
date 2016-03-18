@@ -43,7 +43,7 @@ def test_OutputRecorder_releases():
     sys.stderr == pre_test_stderr_fileno
 
 
-def test_Pipeline_record(recorded_pipeline):
+def test_Pipeline_record(recorded_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', recorded_pipeline)
         print(pipeline.results)
