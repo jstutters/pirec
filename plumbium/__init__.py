@@ -1,1 +1,1 @@
-from processresult import pipeline, record
+from processresult import pipeline, record, call

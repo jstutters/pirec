@@ -1,11 +1,11 @@
 from __future__ import print_function
-from contextlib import contextmanager
 import datetime
 from functools import wraps
 import json
 import os
 import os.path
 import shutil
+import subprocess
 from tarfile import TarFile
 import tempfile
 import traceback
@@ -67,35 +67,26 @@ pipeline = Pipeline()
 
 
 class OutputRecorder(object):
-    def __init__(self):
-        self.record = ''
+    def reset(self):
+        self.output = ''
 
-    @contextmanager
-    def capture(self):
-        current_stdout, current_stderr = sys.stdout, sys.stderr
-        sys.stdout, sys.stderr = self, self
-        try:
-            yield
-        finally:
-            sys.stdout, sys.stderr = current_stdout, current_stderr
 
-    def write(self, data):
-        self.record += data
+_output_recorder = OutputRecorder()
+
+
+def call(cmd):
+    _output_recorder.output += subprocess.check_output(cmd, stderr=subprocess.STDOUT)
 
 
 def record(*output_names):
     def decorator(f):
         @wraps(f)
         def process_recorder(*args, **kwargs):
-            output_rec = OutputRecorder()
             returned_images = None
             exception = None
+            _output_recorder.reset()
             try:
-                if not pipeline.debug:
-                    with output_rec.capture():
-                        returned_images = f(*args, **kwargs)
-                else:
-                    returned_images = f(*args, **kwargs)
+                returned_images = f(*args, **kwargs)
             except:
                 traceback.print_exc(file=sys.stderr)
                 exception = traceback.format_exc()
@@ -106,7 +97,7 @@ def record(*output_names):
                 func=f,
                 args=args,
                 kwargs=kwargs,
-                output=output_rec.record,
+                output=_output_recorder.output,
                 exception=exception,
                 **named_images
             )
@@ -135,14 +126,16 @@ class ProcessOutput(object):
         return r
 
     def as_dict(self):
-        return {
+        d = {
             'function': self.function.__name__,
             'input_args': [repr(x) for x in self.input_args],
             'input_kwargs': {str(x[0]): repr(x[1]) for x in self.input_kwargs},
             'printed_output': self.output,
             'returned': [repr(r) for r in self._results.values()],
-            'exception': repr(self.exception)
         }
+        if self.exception:
+            d['exception'] = repr(self.exception)
+        return d
 
     def __getitem__(self, key):
         return self._results[key]
