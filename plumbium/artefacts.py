@@ -25,6 +25,11 @@ class Artefact(object):
         """Return the filename without the extension and directory components"""
         return os.path.basename(self._filename)[:-self._ext_length]
 
+    @property
+    def dirname(self):
+        """Return the directory component of the filename"""
+        return os.path.dirname(self._filename)
+
     def dereference(self):
         self._filename = os.path.basename(self._filename)
 
