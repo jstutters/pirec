@@ -5,7 +5,7 @@ import json
 import os
 import os.path
 import shutil
-import subprocess
+from subprocess import check_output, STDOUT
 from tarfile import TarFile
 import tempfile
 import traceback
@@ -78,8 +78,8 @@ class OutputRecorder(object):
 _output_recorder = OutputRecorder()
 
 
-def call(cmd):
-    _output_recorder.output += subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+def call(cmd, cwd=None):
+    _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd)
 
 
 def record(*output_names):
