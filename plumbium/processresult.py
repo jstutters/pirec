@@ -17,11 +17,12 @@ class Pipeline(object):
         self.debug = False
         self.results = []
 
-    def run(self, name, pipeline, *input_files, **kwargs):
+    def run(self, name, pipeline, base_dir, *input_files, **kwargs):
         self.results = []
         self.debug = kwargs.get('debug', False)
         self.name = name
         self.input_files = input_files
+        self.base_dir = base_dir
         self.launched_dir = os.getcwd()
         self._copy_input_files_to_working_dir()
         self.start_date = datetime.datetime.now()
@@ -33,8 +34,10 @@ class Pipeline(object):
     def _copy_input_files_to_working_dir(self):
         self.working_dir = tempfile.mkdtemp(prefix='plumbium_{0}_'.format(self.name))
         for i in self.input_files:
-            shutil.copy(i.filename, self.working_dir)
-            i.dereference()
+            dest_dir = os.path.join(self.working_dir, os.path.dirname(i.filename))
+            source = os.path.join(self.base_dir, i.filename)
+            os.makedirs(dest_dir)
+            shutil.copy(source, dest_dir)
 
     def _store_printed_output(self):
         with open('printed_output.txt', 'w') as printed_output_record:
