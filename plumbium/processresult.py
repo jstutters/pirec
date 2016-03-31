@@ -36,7 +36,8 @@ class Pipeline(object):
         for i in self.input_files:
             dest_dir = os.path.join(self.working_dir, os.path.dirname(i.filename))
             source = os.path.join(self.base_dir, i.filename)
-            os.makedirs(dest_dir)
+            if not os.path.exists(dest_dir):
+                os.makedirs(dest_dir)
             shutil.copy(source, dest_dir)
 
     def _store_printed_output(self):
