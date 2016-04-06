@@ -27,9 +27,15 @@ class Pipeline(object):
         self._copy_input_files_to_working_dir()
         self.start_date = datetime.datetime.now()
         os.chdir(self.working_dir)
-        pipeline(*input_files)
-        os.chdir(self.launched_dir)
-        self.save()
+        pipeline_exception = None
+        try:
+            pipeline(*input_files)
+        except Exception as e:
+            pipeline_exception = e
+            traceback.print_exc()
+        finally:
+            os.chdir(self.launched_dir)
+            self.save(pipeline_exception)
 
     def _copy_input_files_to_working_dir(self):
         self.working_dir = tempfile.mkdtemp(prefix='plumbium_{0}_'.format(self.name))
@@ -48,13 +54,15 @@ class Pipeline(object):
     def record(self, result):
         self.results.append(result)
 
-    def save(self):
+    def save(self, exception=None):
         results = {
             'name': self.name,
             'input_files': [repr(f) for f in self.input_files],
             'dir': self.launched_dir,
             'start_date': self.start_date.strftime('%Y%m%d %H:%M'),
         }
+        if exception is not None:
+            results['pipeline_exception'] = repr(exception)
         results['processes'] = [r.as_dict() for r in self.results]
         basename = '{0}-{1}'.format(
             self.name,
