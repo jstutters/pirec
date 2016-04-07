@@ -87,7 +87,11 @@ _output_recorder = OutputRecorder()
 
 
 def call(cmd, cwd=None):
-    _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd)
+    try:
+        _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd)
+    except:
+        print(_output_recorder.output)
+        raise
 
 
 def record(*output_names):
