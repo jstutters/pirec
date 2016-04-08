@@ -5,8 +5,8 @@ import json
 import os
 import os.path
 import shutil
-from subprocess import check_output, STDOUT
-from tarfile import TarFile
+from subprocess import check_output, STDOUT, CalledProcessError
+import tarfile
 import tempfile
 import traceback
 import sys
@@ -68,10 +68,10 @@ class Pipeline(object):
             self.name,
             self.start_date.strftime('%Y%m%d_%H%M')
         )
-        with open(basename + '.json', 'w') as f:
+        with open(os.path.join(self.working_dir, basename + '.json'), 'w') as f:
             json.dump(results, f, indent=4, separators=(',', ': '))
-        archive = TarFile(basename + '.tar', 'w')
-        archive.add(self.working_dir, arcname='')
+        archive = tarfile.open(basename + '.tar.gz', 'w:gz')
+        archive.add(self.working_dir, arcname=basename)
         archive.close()
 
 
@@ -89,8 +89,9 @@ _output_recorder = OutputRecorder()
 def call(cmd, cwd=None):
     try:
         _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd)
-    except:
-        print(_output_recorder.output)
+    except CalledProcessError as e:
+        print(e.output)
+        _output_recorder.output = e.output
         raise
 
 
