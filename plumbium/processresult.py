@@ -34,6 +34,7 @@ class Pipeline(object):
             pipeline_exception = e
             traceback.print_exc()
         finally:
+            self.finish_date = datetime.datetime.now()
             os.chdir(self.launched_dir)
             self.save(pipeline_exception)
 
@@ -60,6 +61,7 @@ class Pipeline(object):
             'input_files': [repr(f) for f in self.input_files],
             'dir': self.launched_dir,
             'start_date': self.start_date.strftime('%Y%m%d %H:%M'),
+            'finish_date': self.finish_date.strftime('%Y%m%d %H:%M'),
         }
         if exception is not None:
             results['pipeline_exception'] = repr(exception)
@@ -70,9 +72,19 @@ class Pipeline(object):
         )
         with open(os.path.join(self.working_dir, basename + '.json'), 'w') as f:
             json.dump(results, f, indent=4, separators=(',', ': '))
-        archive = tarfile.open(basename + '.tar.gz', 'w:gz')
+        archive = tarfile.open(self._clear_filename('.', basename, '.tar.gz'), 'w:gz')
         archive.add(self.working_dir, arcname=basename)
         archive.close()
+
+    def _clear_filename(self, directory, basename, ext):
+        tgt = os.path.join(directory, basename + ext)
+        if os.path.exists(tgt):
+            inc = 1
+            tgt = os.path.join(directory, '{0}-{1:02d}{2}'.format(basename, inc, ext))
+            while os.path.exists(tgt):
+                inc += 1
+                tgt = os.path.join(directory, '{0}-{1:02d}{2}'.format(basename, inc, ext))
+        return tgt
 
 
 pipeline = Pipeline()
