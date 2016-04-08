@@ -9,7 +9,6 @@ from subprocess import check_output, STDOUT, CalledProcessError
 import tarfile
 import tempfile
 import traceback
-import sys
 
 
 class Pipeline(object):
@@ -102,6 +101,8 @@ def call(cmd, cwd=None):
     try:
         _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd)
     except CalledProcessError as e:
+        print('An error occurred during: {}'.format(' '.join(cmd)))
+        print('Output before failure:')
         print(e.output)
         _output_recorder.output = e.output
         raise
@@ -114,36 +115,43 @@ def record(*output_names):
             returned_images = None
             exception = None
             _output_recorder.reset()
+            started = datetime.datetime.now()
             try:
                 returned_images = f(*args, **kwargs)
             except:
-                traceback.print_exc(file=sys.stderr)
                 exception = traceback.format_exc()
-            if type(returned_images) is not tuple:
-                returned_images = (returned_images,)
-            named_images = dict(zip(output_names, returned_images))
-            result = ProcessOutput(
-                func=f,
-                args=args,
-                kwargs=kwargs,
-                output=_output_recorder.output,
-                exception=exception,
-                **named_images
-            )
-            pipeline.record(result)
+                raise
+            finally:
+                if type(returned_images) is not tuple:
+                    returned_images = (returned_images,)
+                finished = datetime.datetime.now()
+                named_images = dict(zip(output_names, returned_images))
+                result = ProcessOutput(
+                    func=f,
+                    args=args,
+                    kwargs=kwargs,
+                    output=_output_recorder.output,
+                    exception=exception,
+                    started=started,
+                    finished=finished,
+                    **named_images
+                )
+                pipeline.record(result)
             return result
         return process_recorder
     return decorator
 
 
 class ProcessOutput(object):
-    def __init__(self, func, args, kwargs, output, exception, **output_images):
+    def __init__(self, func, args, kwargs, output, exception, started, finished,  **output_images):
         self._results = output_images
         self.output = output
         self.function = func
         self.input_args = args
         self.input_kwargs = kwargs
         self.exception = exception
+        self.started = started
+        self.finished = finished
 
     def __repr__(self):
         r = self.function.__name__ + '('
@@ -161,6 +169,8 @@ class ProcessOutput(object):
             'input_kwargs': {str(x[0]): repr(x[1]) for x in self.input_kwargs},
             'printed_output': self.output,
             'returned': [repr(r) for r in self._results.values()],
+            'start_time': self.started.strftime('%Y%m%d %H:%M'),
+            'finish_time': self.finished.strftime('%Y%m%d %H:%M')
         }
         if self.exception:
             d['exception'] = repr(self.exception)
