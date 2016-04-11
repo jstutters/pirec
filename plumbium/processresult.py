@@ -71,7 +71,7 @@ class Pipeline(object):
         )
         with open(os.path.join(self.working_dir, basename + '.json'), 'w') as f:
             json.dump(results, f, indent=4, separators=(',', ': '))
-        archive = tarfile.open(self._clear_filename('.', basename, '.tar.gz'), 'w:gz')
+        archive = tarfile.open(self._clear_filename(self.base_dir, basename, '.tar.gz'), 'w:gz')
         archive.add(self.working_dir, arcname=basename)
         archive.close()
 
