@@ -1,17 +1,18 @@
 from collections import OrderedDict
 import os
 import sys
-from plumbium import call, record, pipeline, recorders
+from plumbium import call, record, pipeline
+from plumbium.recorders import CSVFile
 
 
 @record()
 def pipeline_stage_1():
-    call([os.path.expanduser('~/programming/Plumbium/example/example_script.sh')])
+    call(['echo', 'foo'])
 
 
 @record()
 def pipeline_stage_2():
-    call([os.path.expanduser('~/programming/Plumbium/example/example_script2.sh')])
+    call(['echo', 'data: 55'])
 
 
 def my_pipeline():
@@ -20,7 +21,7 @@ def my_pipeline():
 
 
 def example_pipeline():
-    csvfile = recorders.CSVFile(
+    csvfile = CSVFile(
         'csv_results.csv',
         OrderedDict([
             ('subject', lambda x: x['metadata']['subject']),
