@@ -64,3 +64,5 @@ target/
 *.tar
 *.json
 data_for_testing/
+*.tar.gz
+*.csv
