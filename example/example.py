@@ -1,14 +1,17 @@
-from plumbium import call, record, pipeline
+from collections import OrderedDict
+import os
+import sys
+from plumbium import call, record, pipeline, recorders
 
 
 @record()
 def pipeline_stage_1():
-    call(['/Users/jstutters/proj/Plumbium/example/example_script.sh'])
+    call([os.path.expanduser('~/programming/Plumbium/example/example_script.sh')])
 
 
 @record()
 def pipeline_stage_2():
-    call(['/Users/jstutters/proj/Plumbium/example/example_script2.sh'])
+    call([os.path.expanduser('~/programming/Plumbium/example/example_script2.sh')])
 
 
 def my_pipeline():
@@ -17,7 +20,15 @@ def my_pipeline():
 
 
 def example_pipeline():
-    pipeline.run('example', my_pipeline)
+    csvfile = recorders.CSVFile(
+        'csv_results.csv',
+        OrderedDict([
+            ('subject', lambda x: x['metadata']['subject']),
+            ('start_date', lambda x: x['start_date']),
+            ('data_val', lambda x: x['processes'][-1]['printed_output'].strip().split(':')[1])
+        ])
+    )
+    pipeline.run('example', my_pipeline, sys.argv[1], metadata={'subject': 1}, recorder=csvfile)
 
 
 if __name__ == '__main__':
