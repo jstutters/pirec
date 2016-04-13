@@ -1,3 +1,5 @@
+"""Main plumbium module containing the Pipeline class and function recording methods"""
+
 from __future__ import print_function
 import datetime
 from functools import wraps
@@ -12,6 +14,8 @@ import traceback
 
 
 class Pipeline(object):
+    """Main class managing the recording of a processing pipeline"""
+
     def __init__(self):
         self.debug = False
         self.results = []
