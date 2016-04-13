@@ -21,6 +21,7 @@ class Pipeline(object):
         self.debug = kwargs.get('debug', False)
         self.metadata = kwargs.get('metadata', None)
         self.result_recorder = kwargs.get('recorder', None)
+        self.filename = kwargs.get('filename', '{name}-{start_date:%Y%m%d_%H%M}')
         self.name = name
         self.input_files = input_files
         self.base_dir = base_dir
@@ -69,9 +70,10 @@ class Pipeline(object):
         if self.metadata is not None:
             results['metadata'] = self.metadata
         results['processes'] = [r.as_dict() for r in self.results]
-        basename = '{0}-{1}'.format(
-            self.name,
-            self.start_date.strftime('%Y%m%d_%H%M')
+        basename = self.filename.format(
+            metadata=self.metadata,
+            name=self.name,
+            start_date=self.start_date
         )
         with open(os.path.join(self.working_dir, basename + '.json'), 'w') as f:
             json.dump(results, f, indent=4, separators=(',', ': '))
