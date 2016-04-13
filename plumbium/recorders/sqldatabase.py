@@ -2,6 +2,17 @@ from sqlalchemy import create_engine, text
 
 
 class SQLDatabase(object):
+    """Records results to a database supported by SQLAlchemy
+
+    :param uri: database server URI e.g. ``mysql://username:password@localhost/dbname``
+    :type uri: str
+    :param table: table name
+    :type collection: str
+
+    .. seealso:: `SQLAlchemy documentation
+        <http://docs.sqlalchemy.org/en/latest/core/connections.html>`_
+    """
+
     def __init__(self, uri, table, values):
         self.uri = uri
         self.table = table
