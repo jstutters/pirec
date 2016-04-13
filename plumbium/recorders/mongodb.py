@@ -11,7 +11,8 @@ class MongoDB(object):
     :param collection: collection name
     :type collection: str
 
-    .. note:: Use of this class requires the installation of the `pymongo module <https://pypi.python.org/pypi/pymongo>`_.
+    .. note:: Use of this class requires the installation of the `pymongo
+        module <https://pypi.python.org/pypi/pymongo>`_.
     .. seealso:: `MongoDB tutorial <https://api.mongodb.org/python/current/tutorial.html>`_
     """
 
