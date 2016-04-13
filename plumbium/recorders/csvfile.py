@@ -1,6 +1,7 @@
 import os
 import csv
 
+
 class CSVFile(object):
     def __init__(self, path, values):
         self.path = path
@@ -15,5 +16,5 @@ class CSVFile(object):
                 writer.writeheader()
             row = {}
             for field in self.values:
-                row[field]= self.values[field](results)
+                row[field] = self.values[field](results)
             writer.writerow(row)
