@@ -11,6 +11,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+.. automodule:: plumbium
+.. automodule:: plumbium.processresult
+    :members:
 
 
 Indices and tables
