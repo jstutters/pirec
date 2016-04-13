@@ -23,6 +23,9 @@ class Pipeline(object):
     def run(self, name, pipeline, base_dir, *input_files, **kwargs):
         self.results = []
         self.debug = kwargs.get('debug', False)
+        self.metadata = kwargs.get('metadata', None)
+        self.result_recorder = kwargs.get('recorder', None)
+        self.filename = kwargs.get('filename', '{name}-{start_date:%Y%m%d_%H%M}')
         self.name = name
         self.input_files = input_files
         self.base_dir = base_dir
@@ -62,22 +65,27 @@ class Pipeline(object):
         results = {
             'name': self.name,
             'input_files': [repr(f) for f in self.input_files],
-            'dir': self.launched_dir,
+            'dir': self.base_dir,
             'start_date': self.start_date.strftime('%Y%m%d %H:%M'),
             'finish_date': self.finish_date.strftime('%Y%m%d %H:%M'),
         }
         if exception is not None:
             results['pipeline_exception'] = repr(exception)
+        if self.metadata is not None:
+            results['metadata'] = self.metadata
         results['processes'] = [r.as_dict() for r in self.results]
-        basename = '{0}-{1}'.format(
-            self.name,
-            self.start_date.strftime('%Y%m%d_%H%M')
+        basename = self.filename.format(
+            metadata=self.metadata,
+            name=self.name,
+            start_date=self.start_date
         )
         with open(os.path.join(self.working_dir, basename + '.json'), 'w') as f:
             json.dump(results, f, indent=4, separators=(',', ': '))
-        archive = tarfile.open(self._clear_filename('.', basename, '.tar.gz'), 'w:gz')
+        archive = tarfile.open(self._clear_filename(self.base_dir, basename, '.tar.gz'), 'w:gz')
         archive.add(self.working_dir, arcname=basename)
         archive.close()
+        if self.result_recorder is not None:
+            self.result_recorder.write(results)
 
     def _clear_filename(self, directory, basename, ext):
         tgt = os.path.join(directory, basename + ext)
