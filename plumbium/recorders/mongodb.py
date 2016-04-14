@@ -1,4 +1,7 @@
-from pymongo import MongoClient
+try:
+    from pymongo import MongoClient
+except:
+    pass
 
 
 class MongoDB(object):

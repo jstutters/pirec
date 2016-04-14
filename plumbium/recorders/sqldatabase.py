@@ -1,4 +1,7 @@
-from sqlalchemy import create_engine, text
+try:
+    from sqlalchemy import create_engine, text
+except:
+    pass
 
 
 class SQLDatabase(object):
