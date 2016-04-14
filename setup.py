@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='plumbium',
     version='0.4.0',
-    packages=['plumbium'],
+    packages=['plumbium', 'plumbium.recorders'],
     zip_safe=True,
     author='Jon Stutters',
     author_email='j.stutters@ucl.ac.uk',
