@@ -1,4 +1,9 @@
-"""Main plumbium module containing the Pipeline class and function recording methods"""
+"""
+plumbium.processresult
+**********************
+
+Main plumbium module containing the Pipeline class and function recording methods
+"""
 
 from __future__ import print_function
 import datetime
@@ -14,7 +19,12 @@ import traceback
 
 
 class Pipeline(object):
-    """Main class managing the recording of a processing pipeline"""
+    """
+    plubium.processresult.pipeline
+    ==============================
+
+    Main class managing the recording of a processing pipeline
+    """
 
     def __init__(self):
         self.debug = False
@@ -110,6 +120,15 @@ _output_recorder = OutputRecorder()
 
 
 def call(cmd, cwd=None):
+    """Function used to execute scripts and applications in a pipeline with output captured
+
+    :param cmd: List containing the program to be called and any arguments
+        e.g. ``['tar', '-x', '-f', 'file.tgz']``
+    :type cmd: list
+    :param cwd: Working directory in which to execute the command
+    :type cwd: str
+    """
+
     try:
         _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd)
     except CalledProcessError as e:
@@ -121,6 +140,11 @@ def call(cmd, cwd=None):
 
 
 def record(*output_names):
+    """Decorator for wrapping pipeline stages
+
+    :param \*output_names: The names of each returned variable
+    :type output_names: str
+    """
     def decorator(f):
         @wraps(f)
         def process_recorder(*args, **kwargs):
