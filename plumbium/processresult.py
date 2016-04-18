@@ -53,6 +53,7 @@ class Pipeline(object):
             self.finish_date = datetime.datetime.now()
             os.chdir(self.launched_dir)
             self.save(pipeline_exception)
+            shutil.rmtree(self.working_dir)
 
     def _copy_input_files_to_working_dir(self):
         self.working_dir = tempfile.mkdtemp(prefix='plumbium_{0}_'.format(self.name))
