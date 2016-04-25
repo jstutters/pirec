@@ -2,7 +2,7 @@
 plumbium.processresult
 **********************
 
-Main plumbium module containing the Pipeline class and function recording methods
+Main plumbium module containing the Pipeline class and function recording methods.
 """
 
 from __future__ import print_function
@@ -20,9 +20,6 @@ import traceback
 
 class Pipeline(object):
     """
-    plubium.processresult.pipeline
-    ==============================
-
     Main class managing the recording of a processing pipeline
     """
 
@@ -31,6 +28,20 @@ class Pipeline(object):
         self.results = []
 
     def run(self, name, pipeline, base_dir, *input_files, **kwargs):
+        """Execute a function as a recorded pipeline
+
+        :param name: The name of the pipeline - used to name the output file
+        :type name: str
+        :param pipeline: The function to be run
+        :type pipeline: function
+        :param base_dir: The directory in which to save the pipeline output, also
+            used as the root directory for input filenames if the filenames given
+            are not absolute.
+        :type base_dir: str
+        :param \*input_files: The inputs to the pipeline
+        :type \*input_files: :class:`plumbium.artefacts.Artefact`
+        """
+
         self.results = []
         self.debug = kwargs.get('debug', False)
         self.metadata = kwargs.get('metadata', None)
@@ -120,7 +131,7 @@ class OutputRecorder(object):
 _output_recorder = OutputRecorder()
 
 
-def call(cmd, cwd=None):
+def call(cmd, cwd=None, shell=False):
     """Function used to execute scripts and applications in a pipeline with output captured
 
     :param cmd: List containing the program to be called and any arguments
@@ -128,6 +139,8 @@ def call(cmd, cwd=None):
     :type cmd: list
     :param cwd: Working directory in which to execute the command
     :type cwd: str
+    :param shell: Execute the command in a shell
+    :type shell: bool
     """
 
     try:

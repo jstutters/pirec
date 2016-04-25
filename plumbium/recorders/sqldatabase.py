@@ -1,3 +1,8 @@
+"""
+plumbium.recorders.sqldatabase
+******************************
+"""
+
 try:
     from sqlalchemy import create_engine, text
 except:
@@ -11,6 +16,8 @@ class SQLDatabase(object):
     :type uri: str
     :param table: table name
     :type collection: str
+    :param values: a mapping from database table columns to values
+    :type values: dict
 
     .. seealso:: `SQLAlchemy documentation
         <http://docs.sqlalchemy.org/en/latest/core/connections.html>`_
@@ -22,6 +29,12 @@ class SQLDatabase(object):
         self.values = values
 
     def write(self, results):
+        """Write the results to the database table specified at initialisation.
+
+        :param results: A dictionary of results to record
+        :type results: dict
+        """
+
         engine = create_engine(self.uri)
         field_names = ','.join(self.values.keys())
         values_placeholder = ','.join([':{0}'.format(k) for k in self.values.keys()])

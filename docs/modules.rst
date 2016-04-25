@@ -4,5 +4,11 @@ Modules
 .. automodule:: plumbium
 .. automodule:: plumbium.processresult
     :members:
-.. autoclass:: plumbium.recorders.mongodb.MongoDB
-.. autoclass:: plumbium.recorders.sqldatabase.SQLDatabase
+.. automodule:: plumbium.artefacts
+    :members:
+.. automodule:: plumbium.recorders.csvfile
+    :members:
+.. automodule:: plumbium.recorders.mongodb
+    :members:
+.. automodule:: plumbium.recorders.sqldatabase
+    :members:

@@ -1,3 +1,8 @@
+"""
+plumbium.recorders.mongodb
+**************************
+"""
+
 try:
     from pymongo import MongoClient
 except:
