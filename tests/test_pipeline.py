@@ -65,5 +65,4 @@ def test_save_filename(simple_pipeline, tmpdir):
             metadata={'test': 1},
             filename='result_file_{metadata[test]:03d}'
         )
-        pipeline.save()
         assert 'result_file_001.tar.gz' in [f.basename for f in tmpdir.listdir()]
