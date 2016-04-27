@@ -144,7 +144,7 @@ def call(cmd, cwd=None, shell=False):
     """
 
     try:
-        _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd)
+        _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd, shell=shell)
     except CalledProcessError as e:
         print('An error occurred during: {}'.format(' '.join(cmd)))
         print('Output before failure:')
