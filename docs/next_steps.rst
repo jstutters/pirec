@@ -80,7 +80,7 @@ SQL database
 ++++++++++++
 
 To record to any SQL database supported by `SQLAlchemy
-<http://www.sqlalchemy.org/>`_ use the `SQLDatabase
+<http://www.sqlalchemy.org/>`_ use the :class:`SQLDatabase
 <plumbium.recorders.sqldatabase.SQLDatabase>` class.
 
 .. code:: python
@@ -104,7 +104,7 @@ MongoDB
 +++++++
 
 Plumbium can save the complete JSON result structure to a MongoDB server using
-the `MongoDB <plumbium.recorders.mongodb.MongoDB>` class.
+the :class:`MongoDB <plumbium.recorders.mongodb.MongoDB>` class.
 
 .. code:: python
 
