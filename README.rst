@@ -5,6 +5,14 @@ Plumbium
 Goes around pipelines
 ---------------------
 
+.. image:: https://travis-ci.org/jstutters/Plumbium.svg?branch=master
+    :target: https://travis-ci.org/jstutters/Plumbium
+    :alt: Build Status
+
+.. image:: https://readthedocs.org/projects/plumbium/badge/?version=latest
+ :target: http://plumbium.readthedocs.org/en/latest/?badge=latest
+ :alt: Documentation Status
+
 Plumbium is a Python package for wrapping scripts so that their inputs and
 outputs are preserved in a consistent way and results are recorded.
 
