@@ -56,6 +56,12 @@ Installation
     pip install .
 
 
+Documentation
+-------------
+
+Full documentation is hosted on `Read the Docs <http://plumbium.readthedocs.org>`_.
+
+
 Contribute
 ----------
 
