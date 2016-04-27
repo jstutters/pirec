@@ -125,7 +125,7 @@ pipeline = Pipeline()
 
 class OutputRecorder(object):
     def reset(self):
-        self.output = b''
+        self.output = ''
 
 
 _output_recorder = OutputRecorder()
@@ -217,7 +217,7 @@ class ProcessOutput(object):
             'function': self.function.__name__,
             'input_args': [repr(x) for x in self.input_args],
             'input_kwargs': {str(x[0]): repr(x[1]) for x in self.input_kwargs},
-            'printed_output': self.output,
+            'printed_output': self.output.decode('utf-8'),
             'returned': [repr(r) for r in self._results.values()],
             'start_time': self.started.strftime('%Y%m%d %H:%M'),
             'finish_time': self.finished.strftime('%Y%m%d %H:%M')
