@@ -6,8 +6,9 @@ Module containing the plumbium.artefacts.Artefact base class and classes
 inheriting from it.
 """
 
+from __future__ import absolute_import
 import os.path
-from utils import file_sha1sum
+from .utils import file_sha1sum
 
 
 class Artefact(object):
