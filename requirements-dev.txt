@@ -12,7 +12,6 @@ flake8==2.5.4
 imagesize==0.7.0
 mccabe==0.4.0
 pep8==1.7.0
--e git+git@github.com:jstutters/Plumbium.git@1da3e16a6ac913ea5330e3add06a8beedeb06681#egg=plumbium-origin/HEAD
 py==1.4.31
 pyflakes==1.0.0
 pymongo==3.2.2
