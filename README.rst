@@ -1,9 +1,6 @@
 ========
 Plumbium
 ========
----------------------
-Goes around pipelines
----------------------
 
 .. image:: https://travis-ci.org/jstutters/Plumbium.svg?branch=master
     :target: https://travis-ci.org/jstutters/Plumbium
