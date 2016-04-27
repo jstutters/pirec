@@ -79,16 +79,15 @@ Example
         example_pipeline()
 
 
-
-
 Learn more
 ==========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    installation
    tutorial
+   next_steps
    contribute
    support
    modules
