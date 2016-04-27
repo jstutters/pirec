@@ -6,6 +6,7 @@ python:
   - "nightly"
 
 install: 
-  "pip install ."
-  "pip install py.test"
+  - pip install .
+  - pip install py.test
+  
 script: py.test
