@@ -1,8 +1,17 @@
 Installation
 ============
 
-Plumbium is not currently hosted on PyPI.  The recommended installation method
-is to clone the repository and then install using pip.
+Latest stable release
+---------------------
+
+Plumbium is hosted on PyPI.  The recommended installation method
+is to run ``pip install plumbium``
+
+
+Development version
+-------------------
+
+The development version of Plumbium is available on Github.
 
 ::
 

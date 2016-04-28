@@ -56,9 +56,7 @@ Installation
 
 ::
     
-    git clone https://github.com/jstutters/plumbium.git
-    cd plumbium
-    pip install .
+    pip install plumbium
 
 
 Documentation
