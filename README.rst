@@ -59,6 +59,15 @@ Installation
     pip install plumbium
 
 
+Requirements
+------------
+
+Plumbium is tested with Python v2.7 - 3.5.  Use of the MongoDB or SQLDatabase
+result recorders requires the installation of the ``pymongo`` or ``sqlalchemy``
+modules as appropriate.  Depending on your database SQLAlchemy may require
+additional support libraries to be installed.
+
+
 Documentation
 -------------
 
