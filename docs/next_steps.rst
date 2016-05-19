@@ -90,7 +90,7 @@ To record to any SQL database supported by `SQLAlchemy
         'results',
         {
             'wordcount': lambda x: x['processes'][-1]['printed_output'].strip().split(' ')[0],
-            'start_date', lambda x: x['start_date']
+            'start_date': lambda x: x['start_date']
         }
     )
 
