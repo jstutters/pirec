@@ -30,16 +30,19 @@ class Pipeline(object):
     def run(self, name, pipeline, base_dir, *input_files, **kwargs):
         """Execute a function as a recorded pipeline
 
-        :param name: The name of the pipeline - used to name the output file
-        :type name: str
-        :param pipeline: The function to be run
-        :type pipeline: function
-        :param base_dir: The directory in which to save the pipeline output, also
-            used as the root directory for input filenames if the filenames given
-            are not absolute.
-        :type base_dir: str
-        :param \*input_files: The inputs to the pipeline
-        :type \*input_files: :class:`plumbium.artefacts.Artefact`
+        Args:
+            name (str): The name of the pipeline - used to name the output file
+            pipeline (function): The function to be run
+            base_dir (str): The directory in which to save the pipeline output, also
+                used as the root directory for input filenames if the filenames given
+                are not absolute.
+            \*input_files (:class:`plumbium.artefacts.Artefact`): The inputs to the pipeline
+
+        Keyword Args:
+            metadata (dict): Additional information to be included in the result JSON
+            filename (str): String template for the result filename
+            result_recorder (object): An instance of a class implementing a `write()`
+                method that accepts the results dictionary
         """
 
         self.results = []
@@ -84,6 +87,14 @@ class Pipeline(object):
         self.results.append(result)
 
     def save(self, exception=None):
+        """Create a JSON file with information about the pipeline then save it
+        to a gzipped tar file along with all files used in the pipeline
+
+        Keyword args:
+            exception (Exception or None): The exception which caused the
+            pipeline run to fail
+        """
+
         results = {
             'name': self.name,
             'input_files': [repr(f) for f in self.input_files],
@@ -110,6 +121,19 @@ class Pipeline(object):
             self.result_recorder.write(results)
 
     def _clear_filename(self, directory, basename, ext):
+        """Build a filename that doesn't already exist by appending then incrementing a number
+
+        Args:
+            directory (str): The directory to use
+            basename (str): The basename part of the filename
+            ext (str): The extension part of the filename
+
+        Returns:
+            str: If it doesn't exist returns `directory/basename.ext` otherwise
+            returns the first available `directory/basename-xx.ext` where x is
+            a counter from 01.
+        """
+
         tgt = os.path.join(directory, basename + ext)
         if os.path.exists(tgt):
             inc = 1
@@ -132,15 +156,14 @@ _output_recorder = OutputRecorder()
 
 
 def call(cmd, cwd=None, shell=False):
-    """Function used to execute scripts and applications in a pipeline with output captured
+    """Function used to execute scripts and applications in a pipeline with
+    output captured
 
-    :param cmd: List containing the program to be called and any arguments
-        e.g. ``['tar', '-x', '-f', 'file.tgz']``
-    :type cmd: list
-    :param cwd: Working directory in which to execute the command
-    :type cwd: str
-    :param shell: Execute the command in a shell
-    :type shell: bool
+    Args:
+        cmd (list): List containing the program to be called and any arguments
+            e.g. ``['tar', '-x', '-f', 'file.tgz']``
+        cwd (str): Working directory in which to execute the command
+        shell (bool): Execute the command in a shell
     """
 
     try:
@@ -156,8 +179,8 @@ def call(cmd, cwd=None, shell=False):
 def record(*output_names):
     """Decorator for wrapping pipeline stages
 
-    :param \*output_names: The names of each returned variable
-    :type output_names: str
+    Args:
+        \*output_names (str): The names of each returned variable
     """
     def decorator(f):
         @wraps(f)

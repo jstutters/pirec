@@ -10,10 +10,9 @@ import csv
 class CSVFile(object):
     """Records results to a CSV file
 
-    :param path: The file to which results should be written
-    :type path: str
-    :param values: a mapping from table columns to values
-    :type values: dict
+    Args:
+        path (str): The file to which results should be written
+        values (dict): a mapping from table columns to values
     """
 
     def __init__(self, path, values):
@@ -23,11 +22,13 @@ class CSVFile(object):
     def write(self, results):
         """Write results to the file specified
 
-        .. note:: If the specified does not exist it will be created and a
+        Args:
+            results (dict): A dictionary of results to record
+
+        Note:
+            If the specified does not exist it will be created and a
             header will be written , otherwise the new result is appended.
 
-        :param results: A dictionary of results to record
-        :type results: dict
         """
 
         field_names = self.values.keys()
