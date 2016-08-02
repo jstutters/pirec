@@ -20,7 +20,7 @@ import wrapt
 
 class Pipeline(object):
     """
-    Main class managing the recording of a processing pipeline
+    Main class managing the recording of a processing pipeline.
     """
 
     def __init__(self):
@@ -28,21 +28,21 @@ class Pipeline(object):
         self.results = []
 
     def run(self, name, pipeline, base_dir, *input_files, **kwargs):
-        """Execute a function as a recorded pipeline
+        """Execute a function as a recorded pipeline.
 
         Args:
-            name (str): The name of the pipeline - used to name the output file
-            pipeline (function): The function to be run
+            name (str): The name of the pipeline - used to name the output file.
+            pipeline (function): The function to be run.
             base_dir (str): The directory in which to save the pipeline output, also
                 used as the root directory for input filenames if the filenames given
                 are not absolute.
-            \*input_files (:class:`plumbium.artefacts.Artefact`): The inputs to the pipeline
+            \*input_files (:class:`plumbium.artefacts.Artefact`): The inputs to the pipeline.
 
         Keyword Args:
-            metadata (dict): Additional information to be included in the result JSON
-            filename (str): String template for the result filename
+            metadata (dict): Additional information to be included in the result JSON.
+            filename (str): String template for the result filename.
             result_recorder (object): An instance of a class implementing a `write()`
-                method that accepts the results dictionary
+                method that accepts the results dictionary.
         """
 
         self.results = []
@@ -84,15 +84,21 @@ class Pipeline(object):
                 printed_output_record.write(r.output)
 
     def record(self, result):
+        """Record a result for a stage of this pipeline.
+
+        Args:
+            result (:class:`plumbium.processresult.ProcessOutput`): The new result.
+        """
+
         self.results.append(result)
 
     def save(self, exception=None):
         """Create a JSON file with information about the pipeline then save it
-        to a gzipped tar file along with all files used in the pipeline
+        to a gzipped tar file along with all files used in the pipeline.
 
         Keyword args:
-            exception (Exception or None): The exception which caused the
-            pipeline run to fail
+            exception (:class:`exceptions.Exception` or `None`): The exception which caused the
+                pipeline run to fail
         """
 
         results = {
@@ -121,12 +127,12 @@ class Pipeline(object):
             self.result_recorder.write(results)
 
     def _clear_filename(self, directory, basename, ext):
-        """Build a filename that doesn't already exist by appending then incrementing a number
+        """Build a filename that doesn't already exist by appending then incrementing a number.
 
         Args:
-            directory (str): The directory to use
-            basename (str): The basename part of the filename
-            ext (str): The extension part of the filename
+            directory (str): The directory to use.
+            basename (str): The basename part of the filename.
+            ext (str): The extension part of the filename.
 
         Returns:
             str: If it doesn't exist returns `directory/basename.ext` otherwise
@@ -157,13 +163,13 @@ _output_recorder = OutputRecorder()
 
 def call(cmd, cwd=None, shell=False):
     """Function used to execute scripts and applications in a pipeline with
-    output captured
+    output captured.
 
     Args:
         cmd (list): List containing the program to be called and any arguments
-            e.g. ``['tar', '-x', '-f', 'file.tgz']``
-        cwd (str): Working directory in which to execute the command
-        shell (bool): Execute the command in a shell
+            e.g. ``['tar', '-x', '-f', 'file.tgz']``.
+        cwd (str): Working directory in which to execute the command.
+        shell (bool): Execute the command in a shell.
     """
 
     try:
@@ -177,10 +183,10 @@ def call(cmd, cwd=None, shell=False):
 
 
 def record(*output_names):
-    """Decorator for wrapping pipeline stages
+    """Decorator for wrapping pipeline stages.
 
     Args:
-        \*output_names (str): The names of each returned variable
+        \*output_names (str): The names of each returned variable.
     """
     @wrapt.decorator
     def process_recorder(wrapped, instance, args, kwargs):
@@ -214,6 +220,22 @@ def record(*output_names):
 
 
 class ProcessOutput(object):
+    """A record of the one stage within a pipeline.
+
+    Args:
+        func (function): The function that was run.
+        args (list): The arguments passed to the function.
+        kwargs (dict): The keyword arguments passed to the function.
+        output (str): Text printed to stdout or stderr during execution.
+        exception (:class:`exceptions.Exception` or `None`): The exception that occurred
+            running the stage if applicable.
+        started (:class:`datetime.datetime`): When the stage was started.
+        finished (:class:`datetime.datetime`): When the stage finished executing.
+
+    Keyword args:
+        \*\*output_images (:class:`plumbium.artefacts.Artefact`): Images produced by the stage.
+    """
+
     def __init__(self, func, args, kwargs, output, exception, started, finished,  **output_images):
         self._results = output_images
         self.output = output
@@ -234,6 +256,8 @@ class ProcessOutput(object):
         return r
 
     def as_dict(self):
+        """Serialize this output as a ``dict``."""
+
         d = {
             'function': self.function.__name__,
             'input_args': [repr(x) for x in self.input_args],
