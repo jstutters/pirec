@@ -14,6 +14,7 @@ setup(
     description='Record the inputs and outputs of scripts',
     long_description=readme(),
     url='https://github.com/jstutters/plumbium',
+    install_requires=['wrapt'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     license='MIT',
