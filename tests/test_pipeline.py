@@ -42,16 +42,14 @@ def test_result(simple_pipeline, tmpdir):
 
 def test_stdout_captured(simple_pipeline, tmpdir):
     with tmpdir.as_cwd():
-        recorder = DummyRecorder()
-        pipeline.run('test', simple_pipeline, str(tmpdir), recorder=recorder)
+        pipeline.run('test', simple_pipeline, str(tmpdir))
         proc = pipeline.results[0].as_dict()
         assert proc['printed_output'] == 'test output\n'
 
 
 def test_exception_captured(failing_pipeline, tmpdir):
     with tmpdir.as_cwd():
-        recorder = DummyRecorder()
-        pipeline.run('test', failing_pipeline, str(tmpdir), recorder=recorder)
+        pipeline.run('test', failing_pipeline, str(tmpdir))
         proc = pipeline.results[0].as_dict()
         assert 'IOError' in proc['exception']
 
