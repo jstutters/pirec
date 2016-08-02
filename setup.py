@@ -6,7 +6,7 @@ def readme():
 
 setup(
     name='plumbium',
-    version='0.5.0',
+    version='0.6.0',
     packages=['plumbium', 'plumbium.recorders'],
     zip_safe=True,
     author='Jon Stutters',
