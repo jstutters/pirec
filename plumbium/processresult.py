@@ -182,37 +182,35 @@ def record(*output_names):
     Args:
         \*output_names (str): The names of each returned variable
     """
-    def decorator(f):
-        @wrapt.decorator
-        def process_recorder(wrapped, instance, args, kwargs):
-            returned_images = None
-            exception = None
-            _output_recorder.reset()
-            started = datetime.datetime.now()
-            try:
-                returned_images = wrapped(*args, **kwargs)
-            except:
-                exception = traceback.format_exc()
-                raise
-            finally:
-                if type(returned_images) is not tuple:
-                    returned_images = (returned_images,)
-                finished = datetime.datetime.now()
-                named_images = dict(zip(output_names, returned_images))
-                result = ProcessOutput(
-                    func=wrapped,
-                    args=args,
-                    kwargs=kwargs,
-                    output=_output_recorder.output,
-                    exception=exception,
-                    started=started,
-                    finished=finished,
-                    **named_images
-                )
-                pipeline.record(result)
-            return result
-        return process_recorder
-    return decorator
+    @wrapt.decorator
+    def process_recorder(wrapped, instance, args, kwargs):
+        returned_images = None
+        exception = None
+        _output_recorder.reset()
+        started = datetime.datetime.now()
+        try:
+            returned_images = wrapped(*args, **kwargs)
+        except:
+            exception = traceback.format_exc()
+            raise
+        finally:
+            if type(returned_images) is not tuple:
+                returned_images = (returned_images,)
+            finished = datetime.datetime.now()
+            named_images = dict(zip(output_names, returned_images))
+            result = ProcessOutput(
+                func=wrapped,
+                args=args,
+                kwargs=kwargs,
+                output=_output_recorder.output,
+                exception=exception,
+                started=started,
+                finished=finished,
+                **named_images
+            )
+            pipeline.record(result)
+        return result
+    return process_recorder
 
 
 class ProcessOutput(object):
