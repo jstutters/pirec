@@ -7,7 +7,6 @@ Main plumbium module containing the Pipeline class and function recording method
 
 from __future__ import print_function
 import datetime
-from functools import wraps
 import json
 import os
 import os.path
@@ -16,6 +15,7 @@ from subprocess import check_output, STDOUT, CalledProcessError
 import tarfile
 import tempfile
 import traceback
+import wrapt
 
 
 class Pipeline(object):
@@ -183,14 +183,14 @@ def record(*output_names):
         \*output_names (str): The names of each returned variable
     """
     def decorator(f):
-        @wraps(f)
-        def process_recorder(*args, **kwargs):
+        @wrapt.decorator
+        def process_recorder(wrapped, instance, args, kwargs):
             returned_images = None
             exception = None
             _output_recorder.reset()
             started = datetime.datetime.now()
             try:
-                returned_images = f(*args, **kwargs)
+                returned_images = wrapped(*args, **kwargs)
             except:
                 exception = traceback.format_exc()
                 raise
@@ -200,7 +200,7 @@ def record(*output_names):
                 finished = datetime.datetime.now()
                 named_images = dict(zip(output_names, returned_images))
                 result = ProcessOutput(
-                    func=f,
+                    func=wrapped,
                     args=args,
                     kwargs=kwargs,
                     output=_output_recorder.output,
