@@ -2,9 +2,9 @@
 Plumbium
 ========
 
-.. image:: https://travis-ci.org/jstutters/Plumbium.svg?branch=master
-    :target: https://travis-ci.org/jstutters/Plumbium
-    :alt: Build Status
+.. image:: https://travis-ci.org/jstutters/plumbium.svg?branch=master
+ :target: https://travis-ci.org/jstutters/plumbium
+ :alt: Build Status
 
 .. image:: https://readthedocs.org/projects/plumbium/badge/?version=latest
  :target: http://plumbium.readthedocs.org/en/latest/?badge=latest
