@@ -1,5 +1,7 @@
 # CHANGELOG
-
+## [0.6.1] - 2016-09-07
+### Changed
+- The call() function now returns process output
 
 ## [0.6.0] - 2016-08-02
 ### Changed
