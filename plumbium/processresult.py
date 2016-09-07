@@ -175,14 +175,17 @@ def call(cmd, cwd=None, shell=False):
         shell (bool): Execute the command in a shell.
     """
 
+    output = None
     try:
-        _output_recorder.output += check_output(cmd, stderr=STDOUT, cwd=cwd, shell=shell)
+        output = check_output(cmd, stderr=STDOUT, cwd=cwd, shell=shell)
+        _output_recorder.output += output
     except CalledProcessError as e:
         print('An error occurred during: {}'.format(' '.join(cmd)))
         print('Output before failure:')
         print(e.output)
         _output_recorder.output = e.output
         raise
+    return output
 
 
 def record(*output_names):
