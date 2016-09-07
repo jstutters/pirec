@@ -173,6 +173,9 @@ def call(cmd, cwd=None, shell=False):
             e.g. ``['tar', '-x', '-f', 'file.tgz']``.
         cwd (str): Working directory in which to execute the command.
         shell (bool): Execute the command in a shell.
+
+    Returns:
+        str: The output from the called command on stdout and stderr.
     """
 
     output = None
