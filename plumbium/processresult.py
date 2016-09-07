@@ -154,6 +154,9 @@ pipeline = Pipeline()
 
 
 class OutputRecorder(object):
+    def __init__(self):
+        self.output = b''
+
     def reset(self):
         self.output = b''
 
