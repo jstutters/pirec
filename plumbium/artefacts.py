@@ -52,7 +52,7 @@ class Artefact(object):
 
         .. code:: python
 
-            >> Artefact('/dir/file.txt').basename()
+            >> Artefact('/dir/file.txt').basename
             'file'
         """
 
