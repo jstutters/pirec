@@ -1,6 +1,6 @@
 """
 plumbium.artefacts
-**********************
+******************
 
 Module containing the :class:`plumbium.artefacts.Artefact` base class and classes
 inheriting from it.

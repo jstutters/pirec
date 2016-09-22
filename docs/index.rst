@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to Plumbium's documentation!
-************************************
+####################################
 
 Plumbium is a Python package for wrapping scripts so that their inputs and
 outputs are preserved in a consistent way and results are recorded.

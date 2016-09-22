@@ -1,6 +1,6 @@
 """
 plumbium.processresult
-**********************
+======================
 
 Main plumbium module containing the Pipeline class and function recording methods.
 """
@@ -241,7 +241,7 @@ def record(*output_names):
 
 
 class ProcessOutput(object):
-    """A record of the one stage within a pipeline.
+    """A record of one stage within a pipeline.
 
     Args:
         func (function): The function that was run.

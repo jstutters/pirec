@@ -1,5 +1,5 @@
 Tutorial
-========
+********
 
 Imports
 -------
@@ -125,8 +125,24 @@ run (any errors that occur will also be recorded in this file).
         "finish_date": "20160426 12:13",
         "start_date": "20160426 12:13",
         "dir": ".",
-        "input_files": [
+        "inputs: [
             "TextFile('text_file.txt')",
             "TextFile('text_file2.txt')"
-        ]
+        ],
+        "environment": {
+            "python_packages": [
+                ...
+            ],
+            "hostname": "machine.example.com",
+            "environ": {
+                ...
+            },
+            "uname": [
+                "Linux"
+                "machine.example.com"
+                "3.10.0-327.18.2.el7.x86_64",
+                "#1 SMP Thu May 12 11:03:55 UTC 2016",
+                "x86_64"
+            ]
+        }
     }
