@@ -1,8 +1,3 @@
-"""
-plumbium.recorders.sqldatabase
-******************************
-"""
-
 try:
     from sqlalchemy import create_engine, text
 except:

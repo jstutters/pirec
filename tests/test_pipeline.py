@@ -22,6 +22,18 @@ def simple_pipeline():
 
 
 @pytest.fixture
+def input_pipeline():
+    @record('an_output')
+    def recorded_function(x):
+        call(['echo', str(x)])
+
+    def a_pipeline(x):
+        recorded_function(x)
+
+    return a_pipeline
+
+
+@pytest.fixture
 def failing_pipeline():
     @record('an_output')
     def recorded_function():
@@ -38,6 +50,13 @@ def test_result(simple_pipeline, tmpdir):
         pipeline.run('test', simple_pipeline, str(tmpdir))
         print(pipeline.results)
         assert pipeline.results[0]['an_output'] == 'test_result'
+
+
+def test_input(input_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        pipeline.run('test', input_pipeline, str(tmpdir), 3)
+        proc = pipeline.results[0].as_dict()
+        assert proc['printed_output'] == '3\n'
 
 
 def test_stdout_captured(simple_pipeline, tmpdir):

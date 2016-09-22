@@ -1,8 +1,3 @@
-"""
-plumbium.recorders.csvfile
-**************************
-"""
-
 import os
 import csv
 

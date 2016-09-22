@@ -1,6 +1,6 @@
 """
 plumbium.artefacts
-**********************
+******************
 
 Module containing the :class:`plumbium.artefacts.Artefact` base class and classes
 inheriting from it.
@@ -52,7 +52,7 @@ class Artefact(object):
 
         .. code:: python
 
-            >> Artefact('/dir/file.txt').basename()
+            >> Artefact('/dir/file.txt').basename
             'file'
         """
 
