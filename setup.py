@@ -1,12 +1,13 @@
 from setuptools import setup
 
+
 def readme():
     with open('README.rst') as f:
         return f.read()
 
 setup(
     name='plumbium',
-    version='0.6.1',
+    version='0.6.2',
     packages=['plumbium', 'plumbium.recorders'],
     zip_safe=True,
     author='Jon Stutters',

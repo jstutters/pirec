@@ -1,8 +1,7 @@
 # CHANGELOG
 
-## [0.6.1] - 2016-09-22
+## [0.6.2] - 2016-09-22
 ### Added
-- processresult.call() now returns the output from the called command
 - The pipeline record now includes information about the executing environment
 - Pipelines can now accept input arguments that are not subclasses of artefacts.Artefact
 
@@ -10,6 +9,11 @@
 - Fix docstring errors
 - Add more tests
 - Tidy up documentation structure
+
+
+## [0.6.1] - 2016-09-07
+### Added
+- The call() function now returns process output
 
 
 ## [0.6.0] - 2016-08-02
