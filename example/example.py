@@ -1,5 +1,4 @@
 from collections import OrderedDict
-import os
 import sys
 from plumbium import call, record, pipeline
 from plumbium.recorders import CSVFile
