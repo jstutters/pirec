@@ -17,6 +17,7 @@ import tempfile
 import traceback
 import wrapt
 import plumbium.environment
+import plumbium.artefacts
 
 
 class Pipeline(object):
@@ -28,7 +29,7 @@ class Pipeline(object):
         self.debug = False
         self.results = []
 
-    def run(self, name, pipeline, base_dir, *input_files, **kwargs):
+    def run(self, name, pipeline, base_dir, *inputs, **kwargs):
         """Execute a function as a recorded pipeline.
 
         Args:
@@ -37,7 +38,7 @@ class Pipeline(object):
             base_dir (str): The directory in which to save the pipeline output, also
                 used as the root directory for input filenames if the filenames given
                 are not absolute.
-            \*input_files (:class:`plumbium.artefacts.Artefact`): The inputs to the pipeline.
+            \*inputs: The inputs to the pipeline.
 
         Keyword Args:
             metadata (dict): Additional information to be included in the result JSON.
@@ -52,7 +53,7 @@ class Pipeline(object):
         self.result_recorder = kwargs.get('recorder', None)
         self.filename = kwargs.get('filename', '{name}-{start_date:%Y%m%d_%H%M}')
         self.name = name
-        self.input_files = input_files
+        self.inputs = inputs
         self.base_dir = base_dir
         self.launched_dir = os.getcwd()
         self._copy_input_files_to_working_dir()
@@ -60,7 +61,7 @@ class Pipeline(object):
         os.chdir(self.working_dir)
         pipeline_exception = None
         try:
-            pipeline(*input_files)
+            pipeline(*inputs)
         except Exception as e:
             pipeline_exception = e
             traceback.print_exc()
@@ -71,8 +72,17 @@ class Pipeline(object):
             shutil.rmtree(self.working_dir)
 
     def _copy_input_files_to_working_dir(self):
+        """Copy any input files to working directory.
+
+        If an input argument is a subclass of
+        :class:`plumbium.artefacts.Artefact` copy the file it refers to into
+        the working directory.
+        """
+
         self.working_dir = tempfile.mkdtemp(prefix='plumbium_{0}_'.format(self.name))
-        for i in self.input_files:
+        for i in self.inputs:
+            if not issubclass(type(i), plumbium.artefacts.Artefact):
+                continue
             dest_dir = os.path.join(self.working_dir, os.path.dirname(i.filename))
             source = os.path.join(self.base_dir, i.filename)
             if not os.path.exists(dest_dir):
@@ -105,6 +115,7 @@ class Pipeline(object):
         results = {
             'name': self.name,
             'environment': plumbium.environment.get_environment(),
+            'inputs': [repr(f) for f in self.inputs],
             'dir': self.base_dir,
             'start_date': self.start_date.strftime('%Y%m%d %H:%M'),
             'finish_date': self.finish_date.strftime('%Y%m%d %H:%M'),
