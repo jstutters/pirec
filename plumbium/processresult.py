@@ -16,6 +16,7 @@ import tarfile
 import tempfile
 import traceback
 import wrapt
+import plumbium.environment
 
 
 class Pipeline(object):
@@ -103,7 +104,7 @@ class Pipeline(object):
 
         results = {
             'name': self.name,
-            'input_files': [repr(f) for f in self.input_files],
+            'environment': plumbium.environment.get_environment(),
             'dir': self.base_dir,
             'start_date': self.start_date.strftime('%Y%m%d %H:%M'),
             'finish_date': self.finish_date.strftime('%Y%m%d %H:%M'),
