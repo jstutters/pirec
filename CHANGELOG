@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.6.3] - 2016-10-26
+### Added
+- The command argument to call() is now recorded along with the output
+
+
 ## [0.6.2] - 2016-09-22
 ### Added
 - The pipeline record now includes information about the executing environment
