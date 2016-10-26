@@ -167,9 +167,10 @@ pipeline = Pipeline()
 
 class OutputRecorder(object):
     def __init__(self):
-        self.output = b''
+        self.reset()
 
     def reset(self):
+        self.command = []
         self.output = b''
 
 
@@ -192,6 +193,7 @@ def call(cmd, cwd=None, shell=False):
 
     output = None
     try:
+        _output_recorder.command += cmd
         output = check_output(cmd, stderr=STDOUT, cwd=cwd, shell=shell)
         _output_recorder.output += output
     except CalledProcessError as e:
@@ -229,6 +231,7 @@ def record(*output_names):
                 func=wrapped,
                 args=args,
                 kwargs=kwargs,
+                command=_output_recorder.command,
                 output=_output_recorder.output,
                 exception=exception,
                 started=started,
@@ -257,8 +260,10 @@ class ProcessOutput(object):
         \*\*output_images (:class:`plumbium.artefacts.Artefact`): Images produced by the stage.
     """
 
-    def __init__(self, func, args, kwargs, output, exception, started, finished,  **output_images):
+    def __init__(self, func, args, kwargs, command, output, exception, started, finished,
+                 **output_images):
         self._results = output_images
+        self.command = command
         self.output = output
         self.function = func
         self.input_args = args
@@ -283,6 +288,7 @@ class ProcessOutput(object):
             'function': self.function.__name__,
             'input_args': [repr(x) for x in self.input_args],
             'input_kwargs': {str(x[0]): repr(x[1]) for x in self.input_kwargs},
+            'called_command': ' '.join(self.command),
             'printed_output': self.output.decode('utf-8'),
             'returned': [repr(r) for r in self._results.values()],
             'start_time': self.started.strftime('%Y%m%d %H:%M'),

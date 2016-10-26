@@ -59,6 +59,13 @@ def test_input(input_pipeline, tmpdir):
         assert proc['printed_output'] == '3\n'
 
 
+def test_command_captured(simple_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        pipeline.run('test', simple_pipeline, str(tmpdir))
+        proc = pipeline.results[0].as_dict()
+        assert proc['called_command'] == 'echo test output'
+
+
 def test_stdout_captured(simple_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', simple_pipeline, str(tmpdir))
