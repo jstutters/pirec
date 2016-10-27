@@ -56,7 +56,7 @@ def test_input(input_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', input_pipeline, str(tmpdir), 3)
         proc = pipeline.results[0].as_dict()
-        assert proc['printed_output'] == '3\n'
+        assert proc['printed_output'] == '3'
 
 
 def test_command_captured(simple_pipeline, tmpdir):
@@ -70,7 +70,7 @@ def test_stdout_captured(simple_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', simple_pipeline, str(tmpdir))
         proc = pipeline.results[0].as_dict()
-        assert proc['printed_output'] == 'test output\n'
+        assert proc['printed_output'] == 'test output'
 
 
 def test_exception_captured(failing_pipeline, tmpdir):

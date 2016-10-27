@@ -232,7 +232,7 @@ def record(*output_names):
                 args=args,
                 kwargs=kwargs,
                 command=_output_recorder.command,
-                output=_output_recorder.output,
+                output=_output_recorder.output.strip(),
                 exception=exception,
                 started=started,
                 finished=finished,
