@@ -213,20 +213,20 @@ def record(*output_names):
     """
     @wrapt.decorator
     def process_recorder(wrapped, instance, args, kwargs):
-        returned_images = None
+        returned_from_process = None
         exception = None
         _output_recorder.reset()
         started = datetime.datetime.now()
         try:
-            returned_images = wrapped(*args, **kwargs)
+            returned_from_process = wrapped(*args, **kwargs)
         except:
             exception = traceback.format_exc()
             raise
         finally:
-            if type(returned_images) is not tuple:
-                returned_images = (returned_images,)
+            if type(returned_from_process) is not tuple:
+                returned_from_process = (returned_from_process,)
             finished = datetime.datetime.now()
-            named_images = dict(zip(output_names, returned_images))
+            named_returns = dict(zip(output_names, returned_from_process))
             result = ProcessOutput(
                 func=wrapped,
                 args=args,
@@ -236,7 +236,7 @@ def record(*output_names):
                 exception=exception,
                 started=started,
                 finished=finished,
-                **named_images
+                **named_returns
             )
             pipeline.record(result)
         return result
