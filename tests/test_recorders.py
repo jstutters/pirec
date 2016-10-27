@@ -16,6 +16,18 @@ def simple_pipeline():
     return a_pipeline
 
 
+@pytest.fixture
+def returning_pipeline():
+    @record('value')
+    def recorded_function():
+        return 5.12
+
+    def a_pipeline():
+        recorded_function()
+
+    return a_pipeline
+
+
 def test_csvfile(simple_pipeline, tmpdir):
     with tmpdir.as_cwd():
         recorder = CSVFile(
@@ -54,3 +66,23 @@ def test_stdout(simple_pipeline, tmpdir, capsys):
         )
     out, err = capsys.readouterr()
     assert out == 'id: 1\ndata: 6.35\n'
+
+
+def test_return_record(returning_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        recorder = CSVFile(
+            'test.csv',
+            OrderedDict([
+                ('data', lambda x: x['processes'][0]['returned'][0].strip())
+            ])
+        )
+        pipeline.run(
+            'test',
+            returning_pipeline,
+            str(tmpdir),
+            metadata={'id': 1},
+            recorder=recorder
+        )
+        with open('test.csv') as f:
+            assert f.readline().strip() == 'data'
+            assert f.readline().strip() == '5.12'
