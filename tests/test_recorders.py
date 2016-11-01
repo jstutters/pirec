@@ -68,6 +68,32 @@ def test_stdout(simple_pipeline, tmpdir, capsys):
     assert out == 'id: 1\ndata: 6.35\n'
 
 
+def test_multiple_recorders(simple_pipeline, tmpdir, capsys):
+    with tmpdir.as_cwd():
+        stdout1 = StdOut(
+            OrderedDict([
+                ('id1', lambda x: x['metadata']['id']),
+                ('data1', lambda x: x['processes'][0]['printed_output'].strip())
+            ])
+        )
+        stdout2 = StdOut(
+            OrderedDict([
+                ('id2', lambda x: x['metadata']['id']),
+                ('data2', lambda x: x['processes'][0]['printed_output'].strip())
+            ])
+        )
+        recorders = [stdout1, stdout2]
+        pipeline.run(
+            'test',
+            simple_pipeline,
+            str(tmpdir),
+            metadata={'id': 1},
+            recorder=recorders
+        )
+    out, err = capsys.readouterr()
+    assert out == 'id1: 1\ndata1: 6.35\nid2: 1\ndata2: 6.35\n'
+
+
 def test_return_record(returning_pipeline, tmpdir):
     with tmpdir.as_cwd():
         recorder = CSVFile(

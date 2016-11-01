@@ -136,7 +136,11 @@ class Pipeline(object):
         archive.add(self.working_dir, arcname=basename)
         archive.close()
         if self.result_recorder is not None:
-            self.result_recorder.write(results)
+            if hasattr(self.result_recorder, '__iter__'):
+                for r in self.result_recorder:
+                    r.write(results)
+            else:
+                self.result_recorder.write(results)
 
     def _clear_filename(self, directory, basename, ext):
         """Build a filename that doesn't already exist by appending then incrementing a number.
