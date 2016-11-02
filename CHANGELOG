@@ -1,5 +1,9 @@
 # CHANGELOG
 ## [Unreleased]
+### Added
+- A recorder that sends a message to Slack is now included
+- Multiple recorders may now be used
+
 ### Changed
 - Printed output from commands is now stripped of whitespace before recording
 
