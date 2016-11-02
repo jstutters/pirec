@@ -14,6 +14,8 @@ Modules
     :members:
 .. automodule:: plumbium.recorders.mongodb
     :members:
+.. automodule:: plumbium.recorders.slack
+    :members:
 .. automodule:: plumbium.recorders.sqldatabase
     :members:
 .. automodule:: plumbium.recorders.stdout

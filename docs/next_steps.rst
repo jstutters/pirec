@@ -114,3 +114,30 @@ The first arugment is a MongoDB URL (see the `PyMongo tutorial
 <https://api.mongodb.org/python/current/tutorial.html>`_ for details).  The
 second argument is the database name and the final argument is the collection
 to insert into.
+
+Slack
++++++
+
+The Slack recorder allows a message to be sent to a Slack channel 
+`configured with a Webhook
+<https://my.slack.com/services/new/incoming-webhook/>`_.  You will need the
+name of the channel to post to and the Webhook URL from the Slack website.
+
+.. code:: python
+
+    slack = Slack(
+        'https://hooks.slack.com/services/...',
+        '#channel',
+        OrderedDict([
+            ('start_date', lambda x: x['start_date']),
+            ('data_val', lambda x: x['processes'][-1]['printed_output'].strip().split(' ')[0])
+        ])
+    )
+
+The first argument is the Webhook URL, the second is the channel to post to
+(the channel name should include the preceding #).  The example shown will send
+a message like the following to Slack upon completion:
+
+    | Plumbium task complete
+    | start date: 20160101 11:59
+    | data_val: 55

@@ -5,7 +5,13 @@ except:
 
 
 class Slack(object):
-    """Send a Slack notification when a pipeline completes"""
+    """Send a Slack notification when a pipeline completes
+
+    Args:
+        url (str): Slack Webhook URL
+        channel (str): The channel name to post to
+        values: (dict): a mapping of result keys to report
+    """
 
     def __init__(self, url, channel, values):
         self.url = url
@@ -13,6 +19,12 @@ class Slack(object):
         self.values = values
 
     def write(self, results):
+        """Send a message to Slack
+
+        Args:
+            results (dict): A dictionary of results to record
+        """
+
         msg = ['Plumbium task complete']
         for field in self.values:
             msg.append('{0}: {1}'.format(field, self.values[field](results)))
