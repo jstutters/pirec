@@ -45,38 +45,92 @@ def failing_pipeline():
     return a_pipeline
 
 
-def test_result(simple_pipeline, tmpdir):
+@pytest.fixture
+def single_return_pipeline():
+    @record('an_output')
+    def recorded_function():
+        return 1
+
+    def a_pipeline():
+        rsl = recorded_function()
+        return rsl['an_output']
+
+    return a_pipeline
+
+
+@pytest.fixture
+def multiple_return_pipeline():
+    @record('output1', 'output2')
+    def recorded_function():
+        return 1, 'a'
+
+    def a_pipeline():
+        rsl = recorded_function()
+        return rsl['output1'], rsl['output2']
+
+    return a_pipeline
+
+
+def test_single_result(single_return_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        pipeline.run('test', single_return_pipeline, str(tmpdir))
+        assert pipeline.results['0'] == 1
+
+
+def test_single_named_result(single_return_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        pipeline.run('test', single_return_pipeline, str(tmpdir), result_names=('a_result',))
+        assert pipeline.results['a_result'] == 1
+
+
+def test_multiple_results(multiple_return_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        pipeline.run('test', multiple_return_pipeline, str(tmpdir))
+        assert pipeline.results['0'] == 1
+        assert pipeline.results['1'] == 'a'
+
+
+def test_multiple_named_results(multiple_return_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        pipeline.run(
+            'test', multiple_return_pipeline, str(tmpdir),
+            result_names=('result1', 'result2')
+        )
+        assert pipeline.results['result1'] == 1
+        assert pipeline.results['result2'] == 'a'
+
+
+def test_process_output(simple_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', simple_pipeline, str(tmpdir))
-        print(pipeline.results)
-        assert pipeline.results[0]['an_output'] == 'test_result'
+        assert pipeline.processes[0]['an_output'] == 'test_result'
 
 
 def test_input(input_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', input_pipeline, str(tmpdir), 3)
-        proc = pipeline.results[0].as_dict()
+        proc = pipeline.processes[0].as_dict()
         assert proc['printed_output'] == '3'
 
 
 def test_command_captured(simple_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', simple_pipeline, str(tmpdir))
-        proc = pipeline.results[0].as_dict()
+        proc = pipeline.processes[0].as_dict()
         assert proc['called_command'] == 'echo test output'
 
 
 def test_stdout_captured(simple_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', simple_pipeline, str(tmpdir))
-        proc = pipeline.results[0].as_dict()
+        proc = pipeline.processes[0].as_dict()
         assert proc['printed_output'] == 'test output'
 
 
 def test_exception_captured(failing_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', failing_pipeline, str(tmpdir))
-        proc = pipeline.results[0].as_dict()
+        proc = pipeline.processes[0].as_dict()
         assert 'IOError' in proc['exception']
 
 

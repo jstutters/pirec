@@ -39,9 +39,10 @@ can be captured.
         call([cmd], shell=True)
         return TextFile('joined.txt')
 
-    @record()
+    @record(count)
     def count_words(target):
-        call(['wc', target.filename])
+        wc_output = call(['wc', target.filename])
+        return int(wc_output.strip())
 
 
 
@@ -57,7 +58,8 @@ the function can be accessed using a dict-like method.
 
     def cat_and_count(input_1, input_2):
         concatenate_output = concatenate(input_1, input_2)
-        count_words(concatenate_output['concatenated_file'])
+        count_output = count_words(concatenate_output['concatenated_file'])
+        return count_output['count']
 
 
 Running the pipeline
@@ -124,6 +126,9 @@ run (any errors that occur will also be recorded in this file).
         "name": "cat_and_count",
         "finish_date": "20160426 12:13",
         "start_date": "20160426 12:13",
+        "results": {
+            "0": 1234
+        },
         "dir": ".",
         "inputs: [
             "TextFile('text_file.txt')",

@@ -27,7 +27,7 @@ class Pipeline(object):
 
     def __init__(self):
         self.debug = False
-        self.results = []
+        self.processes = []
 
     def run(self, name, pipeline, base_dir, *inputs, **kwargs):
         """Execute a function as a recorded pipeline.
@@ -44,14 +44,18 @@ class Pipeline(object):
             metadata (dict): Additional information to be included in the result JSON.
             filename (str): String template for the result filename.
             result_recorder (object): An instance of a class implementing a `write()`
-                method that accepts the results dictionary.
+                method that accepts the report dictionary.
+            result_names (str): An iterable of strings containing the names for any values
+                returned by the pipeline.
         """
 
-        self.results = []
+        self.processes = []
         self.debug = kwargs.get('debug', False)
         self.metadata = kwargs.get('metadata', None)
         self.result_recorder = kwargs.get('recorder', None)
         self.filename = kwargs.get('filename', '{name}-{start_date:%Y%m%d_%H%M}')
+        result_names = kwargs.get('result_names', None)
+        self.results = {}
         self.name = name
         self.inputs = inputs
         self.base_dir = base_dir
@@ -60,16 +64,45 @@ class Pipeline(object):
         self.start_date = datetime.datetime.now()
         os.chdir(self.working_dir)
         pipeline_exception = None
+        pipeline_return = None
         try:
-            pipeline(*inputs)
+            pipeline_return = pipeline(*inputs)
         except Exception as e:
             pipeline_exception = e
             traceback.print_exc()
         finally:
+            self._make_results_dict(pipeline_return, result_names)
             self.finish_date = datetime.datetime.now()
             os.chdir(self.launched_dir)
             self.save(pipeline_exception)
             shutil.rmtree(self.working_dir)
+
+    def _make_results_dict(self, results, result_names=None):
+        """Store returned values from the pipeline in a dictionary.
+
+        If an iterable was passed to :func:`run()` this will be used as the keys to the dictionary
+        otherwise the keys will be numbered '0', '1'...
+
+        Args:
+            results (object or tuple): The result(s) to record.
+
+        Keyword Args:
+            result_names (str): An iterable containing the names for the results.
+
+        Raises:
+            ValueError: if the number of results and result names does not match.
+        """
+        if results is not None:
+            if not hasattr(results, '__iter__'):
+                results = (results,)
+            if result_names is None:
+                result_names = [str(i) for i in range(len(results))]
+            if len(result_names) != len(results):
+                raise ValueError
+            self.results = dict(zip(
+                result_names,
+                results
+            ))
 
     def _copy_input_files_to_working_dir(self):
         """Copy any input files to working directory.
@@ -91,17 +124,17 @@ class Pipeline(object):
 
     def _store_printed_output(self):
         with open('printed_output.txt', 'w') as printed_output_record:
-            for r in self.results:
+            for r in self.processes:
                 printed_output_record.write(r.output)
 
-    def record(self, result):
-        """Record a result for a stage of this pipeline.
+    def record(self, process):
+        """Record a process in this pipeline.
 
         Args:
-            result (:class:`plumbium.processresult.ProcessOutput`): The new result.
+            process (:class:`plumbium.processresult.ProcessOutput`): The new result.
         """
 
-        self.results.append(result)
+        self.processes.append(process)
 
     def save(self, exception=None):
         """Create a JSON file with information about the pipeline then save it
@@ -112,35 +145,37 @@ class Pipeline(object):
                 pipeline run to fail
         """
 
-        results = {
+        report = {
             'name': self.name,
             'environment': plumbium.environment.get_environment(),
             'inputs': [repr(f) for f in self.inputs],
             'dir': self.base_dir,
             'start_date': self.start_date.strftime('%Y%m%d %H:%M'),
             'finish_date': self.finish_date.strftime('%Y%m%d %H:%M'),
+            'results': self.results,
         }
+
         if exception is not None:
-            results['pipeline_exception'] = repr(exception)
+            report['pipeline_exception'] = repr(exception)
         if self.metadata is not None:
-            results['metadata'] = self.metadata
-        results['processes'] = [r.as_dict() for r in self.results]
+            report['metadata'] = self.metadata
+        report['processes'] = [r.as_dict() for r in self.processes]
         basename = self.filename.format(
             metadata=self.metadata,
             name=self.name,
             start_date=self.start_date
         )
         with open(os.path.join(self.working_dir, basename + '.json'), 'w') as f:
-            json.dump(results, f, indent=4, separators=(',', ': '))
+            json.dump(report, f, indent=4, separators=(',', ': '))
         archive = tarfile.open(self._clear_filename(self.base_dir, basename, '.tar.gz'), 'w:gz')
         archive.add(self.working_dir, arcname=basename)
         archive.close()
         if self.result_recorder is not None:
             if hasattr(self.result_recorder, '__iter__'):
                 for r in self.result_recorder:
-                    r.write(results)
+                    r.write(report)
             else:
-                self.result_recorder.write(results)
+                self.result_recorder.write(report)
 
     def _clear_filename(self, directory, basename, ext):
         """Build a filename that doesn't already exist by appending then incrementing a number.

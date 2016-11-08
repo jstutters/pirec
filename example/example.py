@@ -17,6 +17,7 @@ def pipeline_stage_2():
 def my_pipeline():
     pipeline_stage_1()
     pipeline_stage_2()
+    return 5
 
 
 def example_pipeline():
@@ -25,10 +26,18 @@ def example_pipeline():
         OrderedDict([
             ('subject', lambda x: x['metadata']['subject']),
             ('start_date', lambda x: x['start_date']),
-            ('data_val', lambda x: x['processes'][-1]['printed_output'].strip().split(':')[1])
+            ('process_val', lambda x: x['processes'][-1]['printed_output'].strip().split(':')[1]),
+            ('result_val', lambda x: x['results']['my_result'])
         ])
     )
-    pipeline.run('example', my_pipeline, sys.argv[1], metadata={'subject': 1}, recorder=csvfile)
+    pipeline.run(
+        'example',
+        my_pipeline,
+        sys.argv[1],
+        metadata={'subject': 1},
+        recorder=csvfile,
+        result_names=('my_result',)
+    )
 
 
 if __name__ == '__main__':
