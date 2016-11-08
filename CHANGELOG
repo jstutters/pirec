@@ -1,4 +1,7 @@
 # CHANGELOG
+## [0.6.5] - Unreleased
+- Values returned from pipelines are now recorded
+
 ## [0.6.4] - 2016-11-02
 ### Added
 - A recorder that sends a message to Slack is now included
