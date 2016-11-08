@@ -21,6 +21,22 @@ This metadata dictionary will be included in the saved JSON file and can be
 used by result recorders and to name output files.
 
 
+Pipeline result names
+---------------------
+
+If your pipeline function returns values these can be named in the report file
+using the ``result_names`` keyword argument.
+
+.. code:: python
+
+    pipeline.run(
+        'example',
+        my_pipeline,
+        base_directory,
+        result_names=('foo', 'bar')
+    )
+
+
 Output file naming
 ------------------
 
