@@ -1,5 +1,5 @@
 # CHANGELOG
-## [Unreleased]
+## [0.6.4] - 2016-11-02
 ### Added
 - A recorder that sends a message to Slack is now included
 - Multiple recorders may now be used
