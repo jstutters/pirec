@@ -5,12 +5,16 @@ except:
 
 
 class Slack(object):
-    """Send a Slack notification when a pipeline completes
+    """Send a Slack notification when a pipeline completes.
 
     Args:
         url (str): Slack Webhook URL
         channel (str): The channel name to post to
-        values: (dict): a mapping of result keys to report
+        values: (dict): A mapping of result keys to report
+
+    Note:
+        Use of this class requires the installation of the `slackclient module
+        <https://slackapi.github.io/python-slackclient/>`_.
     """
 
     def __init__(self, url, channel, values):
@@ -19,7 +23,7 @@ class Slack(object):
         self.values = values
 
     def write(self, results):
-        """Send a message to Slack
+        """Send a message to Slack.
 
         Args:
             results (dict): A dictionary of results to record
