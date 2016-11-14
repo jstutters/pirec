@@ -2,6 +2,9 @@
 ## [Unreleased]
 ### Changed
 - Wheels are now built for Python 2 and 3
+- JSON pipeline report is now saved to report.json.  This can be changed by
+  supplying the report_name keyword argument to Pipeline.run().  Fixing the name
+  makes automated reading data from the report later easier.
 
 
 ## [0.6.5] - 2016-11-08
