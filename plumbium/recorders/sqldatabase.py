@@ -5,17 +5,15 @@ except:
 
 
 class SQLDatabase(object):
-    """Records results to a database supported by SQLAlchemy
+    """Records results to a database supported by SQLAlchemy.
 
-    :param uri: database server URI e.g. ``mysql://username:password@localhost/dbname``
-    :type uri: str
-    :param table: table name
-    :type collection: str
-    :param values: a mapping from database table columns to values
-    :type values: dict
+    Args:
+        uri (str): database server URI e.g. ``mysql://username:password@localhost/dbname``
+        table (str): table name
+        values (dict): a mapping from database table columns to values
 
-    .. seealso:: `SQLAlchemy documentation
-        <http://docs.sqlalchemy.org/en/latest/core/connections.html>`_
+    See Also:
+        `SQLAlchemy documentation <http://docs.sqlalchemy.org/en/latest/core/connections.html>`_
     """
 
     def __init__(self, uri, table, values):
@@ -26,8 +24,8 @@ class SQLDatabase(object):
     def write(self, results):
         """Write the results to the database table specified at initialisation.
 
-        :param results: A dictionary of results to record
-        :type results: dict
+        Args:
+            results (dict): A dictionary of results to record
         """
 
         engine = create_engine(self.uri)

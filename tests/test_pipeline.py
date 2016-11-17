@@ -15,8 +15,13 @@ def simple_pipeline():
         call(['echo', 'test output'])
         return 'test_result'
 
+    @record('other_output')
+    def other_function(keyword_arg=123):
+        call(['echo', 'other output'])
+
     def a_pipeline():
         recorded_function()
+        other_function(keyword_arg=456)
 
     return a_pipeline
 
@@ -132,6 +137,13 @@ def test_exception_captured(failing_pipeline, tmpdir):
         pipeline.run('test', failing_pipeline, str(tmpdir))
         proc = pipeline.processes[0].as_dict()
         assert 'IOError' in proc['exception']
+
+
+def test_kwargs_captured(simple_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        pipeline.run('test', simple_pipeline, str(tmpdir))
+        func_kwargs = pipeline.processes[1].as_dict()['input_kwargs']
+        assert func_kwargs['keyword_arg'] == '456'
 
 
 def test_save_filename(simple_pipeline, tmpdir):

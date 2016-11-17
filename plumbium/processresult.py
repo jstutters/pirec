@@ -47,6 +47,7 @@ class Pipeline(object):
                 method that accepts the report dictionary.
             result_names (str): An iterable of strings containing the names for any values
                 returned by the pipeline.
+            report_name (str): Filename for the JSON report (default: `report.json`).
         """
 
         self.processes = []
@@ -54,6 +55,7 @@ class Pipeline(object):
         self.metadata = kwargs.get('metadata', None)
         self.result_recorder = kwargs.get('recorder', None)
         self.filename = kwargs.get('filename', '{name}-{start_date:%Y%m%d_%H%M}')
+        self.report_name = kwargs.get('report_name', 'report.json')
         result_names = kwargs.get('result_names', None)
         self.results = {}
         self.name = name
@@ -74,7 +76,7 @@ class Pipeline(object):
             self._make_results_dict(pipeline_return, result_names)
             self.finish_date = datetime.datetime.now()
             os.chdir(self.launched_dir)
-            self.save(pipeline_exception)
+            self.save(pipeline_exception, report_name=self.report_name)
             shutil.rmtree(self.working_dir)
 
     def _make_results_dict(self, results, result_names=None):
@@ -136,7 +138,7 @@ class Pipeline(object):
 
         self.processes.append(process)
 
-    def save(self, exception=None):
+    def save(self, exception=None, report_name='report.json'):
         """Create a JSON file with information about the pipeline then save it
         to a gzipped tar file along with all files used in the pipeline.
 
@@ -165,7 +167,7 @@ class Pipeline(object):
             name=self.name,
             start_date=self.start_date
         )
-        with open(os.path.join(self.working_dir, basename + '.json'), 'w') as f:
+        with open(os.path.join(self.working_dir, report_name), 'w') as f:
             json.dump(report, f, indent=4, separators=(',', ': '))
         archive = tarfile.open(self._clear_filename(self.base_dir, basename, '.tar.gz'), 'w:gz')
         archive.add(self.working_dir, arcname=basename)
@@ -326,7 +328,7 @@ class ProcessOutput(object):
         d = {
             'function': self.function.__name__,
             'input_args': [repr(x) for x in self.input_args],
-            'input_kwargs': {str(x[0]): repr(x[1]) for x in self.input_kwargs},
+            'input_kwargs': {str(x): repr(self.input_kwargs[x]) for x in self.input_kwargs},
             'called_command': ' '.join(self.command),
             'printed_output': self.output.decode('utf-8'),
             'returned': [repr(r) for r in self._results.values()],
