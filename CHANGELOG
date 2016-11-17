@@ -1,5 +1,5 @@
 # CHANGELOG
-## [Unreleased]
+## [0.7.0] - 2016-11-17
 ### Changed
 - Wheels are now built for Python 2 and 3
 - JSON pipeline report is now saved to report.json.  This can be changed by
