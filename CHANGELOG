@@ -5,6 +5,7 @@
 - JSON pipeline report is now saved to report.json.  This can be changed by
   supplying the report_name keyword argument to Pipeline.run().  Fixing the name
   makes automated reading data from the report later easier.
+- Keyword arguments to recorded functions are now saved correctly.
 
 
 ## [0.6.5] - 2016-11-08

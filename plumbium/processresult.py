@@ -328,7 +328,7 @@ class ProcessOutput(object):
         d = {
             'function': self.function.__name__,
             'input_args': [repr(x) for x in self.input_args],
-            'input_kwargs': {str(x[0]): repr(x[1]) for x in self.input_kwargs},
+            'input_kwargs': {str(x): repr(self.input_kwargs[x]) for x in self.input_kwargs},
             'called_command': ' '.join(self.command),
             'printed_output': self.output.decode('utf-8'),
             'returned': [repr(r) for r in self._results.values()],
