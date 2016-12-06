@@ -53,10 +53,24 @@ class Artefact(object):
         .. code:: python
 
             >> Artefact('/dir/file.txt').basename
+            '/dir/file'
+        """
+
+        return self._filename[:-self._ext_length]
+
+
+    @propery
+    def justname(self):
+        """The filename without the extension and directory components.
+
+        .. code:: python
+
+            >> Artefact('/dir/file.txt').justname
             'file'
         """
 
         return os.path.basename(self._filename)[:-self._ext_length]
+
 
     @property
     def dirname(self):
