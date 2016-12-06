@@ -59,7 +59,7 @@ class Artefact(object):
         return self._filename[:-self._ext_length]
 
 
-    @propery
+    @property
     def justname(self):
         """The filename without the extension and directory components.
 
