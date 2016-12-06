@@ -1,4 +1,10 @@
 # CHANGELOG
+## [0.8.0] - Unreleased
+### Changed
+- Renamed Artefact.basename to Artefact.justname and modified Artefact.basename to include 
+  directory components.
+
+
 ## [0.7.0] - 2016-11-17
 ### Changed
 - Wheels are now built for Python 2 and 3
