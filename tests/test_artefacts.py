@@ -18,7 +18,17 @@ def test_Artefact_dirname():
 
 def test_Artefact_basename_with_dir():
     img = artefacts.Artefact('dir/foo.nii.gz', '.nii.gz')
-    assert img.basename == 'foo'
+    assert img.basename == 'dir/foo'
+
+
+def test_Artefact_justname():
+    img = artefacts.Artefact('foo.nii.gz', '.nii.gz')
+    assert img.justname == 'foo'
+
+
+def test_Artefact_justname_with_dir():
+    img = artefacts.Artefact('dir/foo.nii.gz', '.nii.gz')
+    assert img.justname == 'foo'
 
 
 def test_Artefact_repr():
