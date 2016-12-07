@@ -1,5 +1,5 @@
 # CHANGELOG
-## [0.8.0] - Unreleased
+## [0.8.0] - 2016-12-07
 ### Changed
 - Renamed Artefact.basename to Artefact.justname and modified Artefact.basename to include 
   directory components.
