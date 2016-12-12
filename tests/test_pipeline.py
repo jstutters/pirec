@@ -76,6 +76,19 @@ def multiple_return_pipeline():
     return a_pipeline
 
 
+@pytest.fixture
+def multiple_cmd_pipeline():
+    @record('an_output')
+    def recorded_function(x):
+        call(['echo', x])
+        call(['echo', x])
+
+    def a_pipeline():
+        recorded_function('a')
+
+    return a_pipeline
+
+
 def test_single_result(single_return_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', single_return_pipeline, str(tmpdir))
@@ -122,7 +135,7 @@ def test_command_captured(simple_pipeline, tmpdir):
     with tmpdir.as_cwd():
         pipeline.run('test', simple_pipeline, str(tmpdir))
         proc = pipeline.processes[0].as_dict()
-        assert proc['called_command'] == 'echo test output'
+        assert proc['called_commands'] == ['echo test output']
 
 
 def test_stdout_captured(simple_pipeline, tmpdir):
@@ -144,6 +157,13 @@ def test_kwargs_captured(simple_pipeline, tmpdir):
         pipeline.run('test', simple_pipeline, str(tmpdir))
         func_kwargs = pipeline.processes[1].as_dict()['input_kwargs']
         assert func_kwargs['keyword_arg'] == '456'
+
+
+def test_multiple_commands(multiple_cmd_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        pipeline.run('test', multiple_cmd_pipeline, str(tmpdir))
+        proc = pipeline.processes[0].as_dict()
+        assert proc['called_commands'] == ['echo a', 'echo a']
 
 
 def test_save_filename(simple_pipeline, tmpdir):
