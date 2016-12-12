@@ -1,4 +1,10 @@
 # CHANGELOG
+## [0.9.0] - 2016-12-12
+### Changed
+- Calls made by recorded functions are now stored and serialized as lists so that functions using 
+  multiple commands are correctly described.
+
+
 ## [0.8.0] - 2016-12-07
 ### Changed
 - Renamed Artefact.basename to Artefact.justname and modified Artefact.basename to include 
