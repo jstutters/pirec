@@ -109,6 +109,9 @@ run (any errors that occur will also be recorded in this file).
                 "input_args": [
                     "TextFile('text_file.txt')",
                     "TextFile('text_file2.txt')"
+                ],
+                "called_commands": [
+                    "cat text_file.txt text_file2.txt"
                 ]
             },
             {
@@ -120,6 +123,9 @@ run (any errors that occur will also be recorded in this file).
                 "printed_output": "4 joined.txt\n",
                 "input_args": [
                     "TextFile('joined.txt')"
+                ],
+                "called_commands": [
+                    "wc joined.txt"
                 ]
             }
         ],
