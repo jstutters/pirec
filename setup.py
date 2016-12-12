@@ -12,7 +12,7 @@ setup(
     zip_safe=True,
     author='Jon Stutters',
     author_email='j.stutters@ucl.ac.uk',
-    description='Record the inputs and outputs of scripts',
+    description='Records the inputs and outputs of scripts',
     long_description=readme(),
     url='https://github.com/jstutters/plumbium',
     install_requires=['wrapt'],
