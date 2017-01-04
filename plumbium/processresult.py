@@ -6,6 +6,7 @@ Main plumbium module containing the Pipeline class and function recording method
 """
 
 from __future__ import print_function
+from collections import Mapping
 import datetime
 import json
 import os
@@ -284,7 +285,7 @@ def record(*output_names):
     return process_recorder
 
 
-class ProcessOutput(object):
+class ProcessOutput(Mapping):
     """A record of one stage within a pipeline.
 
     Args:
@@ -341,3 +342,9 @@ class ProcessOutput(object):
 
     def __getitem__(self, key):
         return self._results[key]
+
+    def __len__(self):
+        return len(self._results)
+
+    def __iter__(self):
+        return self._results.__iter__
