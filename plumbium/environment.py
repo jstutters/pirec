@@ -29,7 +29,7 @@ def get_environment():
     env = {}
     try:
         env['python_packages'] = [str(p) for p in pip.get_installed_distributions()]
-    except:
+    except:  # pylint: disable=bare-except
         pass
     env['hostname'] = socket.gethostname()
     env['uname'] = os.uname()
