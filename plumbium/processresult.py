@@ -341,10 +341,10 @@ class ProcessOutput(Mapping):
         return d
 
     def __getitem__(self, key):
-        return self._results[key]
+        return self._results.__getitem__(key)
 
     def __len__(self):
-        return len(self._results)
+        return self._results.__len__()
 
     def __iter__(self):
-        return self._results.__iter__
+        return self._results.__iter__()
