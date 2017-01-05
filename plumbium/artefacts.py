@@ -58,7 +58,6 @@ class Artefact(object):
 
         return self._filename[:-self._ext_length]
 
-
     @property
     def justname(self):
         """The filename without the extension and directory components.
@@ -70,7 +69,6 @@ class Artefact(object):
         """
 
         return os.path.basename(self._filename)[:-self._ext_length]
-
 
     @property
     def dirname(self):
