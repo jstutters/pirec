@@ -3,3 +3,4 @@
 """
 
 from .processresult import pipeline, record, call
+__all__ = ['pipeline', 'record', 'call']
