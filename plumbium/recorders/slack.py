@@ -1,6 +1,7 @@
+"""Exposes the Slack result recorder."""
 try:
     import requests
-except:
+except ImportError:
     pass
 
 

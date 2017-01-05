@@ -1,6 +1,7 @@
+"""Exposes the SQLDatabase result recorder."""
 try:
     from sqlalchemy import create_engine, text
-except:
+except ImportError:
     pass
 
 

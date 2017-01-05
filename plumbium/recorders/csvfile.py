@@ -1,3 +1,4 @@
+"""Exposes the CSVFile result recorder."""
 import os
 import csv
 

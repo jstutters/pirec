@@ -5,6 +5,8 @@ plumbium.processresult
 Main plumbium module containing the Pipeline class and function recording methods.
 """
 
+# pylint: disable=attribute-defined-outside-init
+
 from __future__ import print_function
 from collections import Mapping
 import datetime
@@ -26,20 +28,16 @@ class Pipeline(object):
     Main class managing the recording of a processing pipeline.
     """
 
-    def __init__(self):
-        self.debug = False
-        self.processes = []
-
-    def run(self, name, pipeline, base_dir, *inputs, **kwargs):
+    def run(self, name, pipeline_func, base_dir, *inputs, **kwargs):
         """Execute a function as a recorded pipeline.
 
         Args:
             name (str): The name of the pipeline - used to name the output file.
-            pipeline (function): The function to be run.
+            pipeline_function (function): The function to be run.
             base_dir (str): The directory in which to save the pipeline output, also
                 used as the root directory for input filenames if the filenames given
                 are not absolute.
-            \*inputs: The inputs to the pipeline.
+            *inputs: The inputs to the pipeline.
 
         Keyword Args:
             metadata (dict): Additional information to be included in the result JSON.
@@ -63,13 +61,13 @@ class Pipeline(object):
         self.inputs = inputs
         self.base_dir = base_dir
         self.launched_dir = os.getcwd()
-        self._copy_input_files_to_working_dir()
+        self._copy_input_files_to_work_dir()
         self.start_date = datetime.datetime.now()
         os.chdir(self.working_dir)
         pipeline_exception = None
         pipeline_return = None
         try:
-            pipeline_return = pipeline(*inputs)
+            pipeline_return = pipeline_func(*inputs)
         except Exception as e:
             pipeline_exception = e
             traceback.print_exc()
@@ -107,7 +105,7 @@ class Pipeline(object):
                 results
             ))
 
-    def _copy_input_files_to_working_dir(self):
+    def _copy_input_files_to_work_dir(self):
         """Copy any input files to working directory.
 
         If an input argument is a subclass of
@@ -126,6 +124,7 @@ class Pipeline(object):
             shutil.copy(source, dest_dir)
 
     def _store_printed_output(self):
+        """Write any printed output from pipeline processes to a file."""
         with open('printed_output.txt', 'w') as printed_output_record:
             for r in self.processes:
                 printed_output_record.write(r.output)
@@ -208,10 +207,12 @@ pipeline = Pipeline()
 
 
 class OutputRecorder(object):
+    """Holds commands used via the call function and their resulting output."""
     def __init__(self):
         self.reset()
 
     def reset(self):
+        """Clear the stored commands and output."""
         self.commands = []
         self.output = b''
 
@@ -251,10 +252,11 @@ def record(*output_names):
     """Decorator for wrapping pipeline stages.
 
     Args:
-        \*output_names (str): The names of each returned variable.
+        *output_names (str): The names of each returned variable.
     """
     @wrapt.decorator
-    def process_recorder(wrapped, instance, args, kwargs):
+    def process_recorder(wrapped, _, args, kwargs):
+        """Execute and record the wrapped function."""
         returned_from_process = None
         exception = None
         _output_recorder.reset()
@@ -265,7 +267,7 @@ def record(*output_names):
             exception = traceback.format_exc()
             raise
         finally:
-            if type(returned_from_process) is not tuple:
+            if not isinstance(returned_from_process, tuple):
                 returned_from_process = (returned_from_process,)
             finished = datetime.datetime.now()
             named_returns = dict(zip(output_names, returned_from_process))
@@ -297,9 +299,7 @@ class ProcessOutput(Mapping):
             running the stage if applicable.
         started (:class:`datetime.datetime`): When the stage was started.
         finished (:class:`datetime.datetime`): When the stage finished executing.
-
-    Keyword args:
-        \*\*output_images (:class:`plumbium.artefacts.Artefact`): Images produced by the stage.
+        **output_images (:class:`plumbium.artefacts.Artefact`): Images produced by the stage.
     """
 
     def __init__(self, func, args, kwargs, commands, output, exception, started, finished,
@@ -319,7 +319,7 @@ class ProcessOutput(Mapping):
         if self.input_args:
             r += ', '.join([repr(x) for x in self.input_args])
         if self.input_kwargs:
-            r += ', '.join(['{0}={1!r}'.format(x) for x in self.input_kwargs])
+            r += ', '.join(['{0}={1!r}'.format(x, self.input_kwargs[x]) for x in self.input_kwargs])
         r += ')'
         return r
 

@@ -1,6 +1,7 @@
+"""Exposes the MongoDB recorder class."""
 try:
     from pymongo import MongoClient
-except:
+except ImportError:
     pass
 
 
@@ -26,6 +27,7 @@ class MongoDB(object):
         self.collection_name = collection
 
     def write(self, results):
+        """Insert results into the database."""
         client = MongoClient(self.uri)
         db = client[self.database_name]
         collection = db[self.collection_name]
