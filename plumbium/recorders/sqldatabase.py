@@ -1,11 +1,12 @@
+"""Exposes the SQLDatabase result recorder."""
 try:
     from sqlalchemy import create_engine, text
-except:
+except ImportError:
     pass
 
 
 class SQLDatabase(object):
-    """Records results to a database supported by SQLAlchemy.
+    """Record results to a database supported by SQLAlchemy.
 
     Args:
         uri (str): database server URI e.g. ``mysql://username:password@localhost/dbname``
@@ -17,6 +18,7 @@ class SQLDatabase(object):
     """
 
     def __init__(self, uri, table, values):
+        """Initialize the recorder."""
         self.uri = uri
         self.table = table
         self.values = values
@@ -27,7 +29,6 @@ class SQLDatabase(object):
         Args:
             results (dict): A dictionary of results to record
         """
-
         engine = create_engine(self.uri)
         field_names = ','.join(self.values.keys())
         values_placeholder = ','.join([':{0}'.format(k) for k in self.values.keys()])

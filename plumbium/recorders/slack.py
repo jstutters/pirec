@@ -1,6 +1,7 @@
+"""Exposes the Slack result recorder."""
 try:
     import requests
-except:
+except ImportError:
     pass
 
 
@@ -18,6 +19,7 @@ class Slack(object):
     """
 
     def __init__(self, url, channel, values):
+        """Initialize the recorder."""
         self.url = url
         self.channel = channel
         self.values = values
@@ -28,7 +30,6 @@ class Slack(object):
         Args:
             results (dict): A dictionary of results to record
         """
-
         msg = ['Plumbium task complete']
         for field in self.values:
             msg.append('{0}: {1}'.format(field, self.values[field](results)))
