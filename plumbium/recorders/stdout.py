@@ -10,6 +10,7 @@ class StdOut(object):
     """
 
     def __init__(self, values):
+        """Initialize the recorder."""
         self.values = values
 
     def write(self, results):

@@ -1,9 +1,4 @@
-"""
-plumbium.environment
-====================
-
-Module containing the get_environment function.
-"""
+"""Module containing the get_environment function."""
 
 import os
 try:
@@ -25,7 +20,6 @@ def get_environment():
     Returns:
         dict: a dict with the keys ``python_packages``, ``hostname``, ``uname`` and ``environ``
     """
-
     env = {}
     try:
         env['python_packages'] = [str(p) for p in pip.get_installed_distributions()]

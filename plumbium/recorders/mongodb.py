@@ -22,6 +22,7 @@ class MongoDB(object):
     """
 
     def __init__(self, uri, database, collection):
+        """Initialize the recorder."""
         self.uri = uri
         self.database_name = database
         self.collection_name = collection

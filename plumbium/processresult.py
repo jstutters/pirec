@@ -1,9 +1,4 @@
-"""
-plumbium.processresult
-======================
-
-Main plumbium module containing the Pipeline class and function recording methods.
-"""
+"""Main plumbium module containing the Pipeline class and function recording methods."""
 
 # pylint: disable=attribute-defined-outside-init
 
@@ -24,9 +19,7 @@ import plumbium.artefacts
 
 
 class Pipeline(object):
-    """
-    Main class managing the recording of a processing pipeline.
-    """
+    """Main class managing the recording of a processing pipeline."""
 
     def run(self, name, pipeline_func, base_dir, *inputs, **kwargs):
         """Execute a function as a recorded pipeline.
@@ -48,7 +41,6 @@ class Pipeline(object):
                 returned by the pipeline.
             report_name (str): Filename for the JSON report (default: `report.json`).
         """
-
         self.processes = []
         self.debug = kwargs.get('debug', False)
         self.metadata = kwargs.get('metadata', None)
@@ -112,7 +104,6 @@ class Pipeline(object):
         :class:`plumbium.artefacts.Artefact` copy the file it refers to into
         the working directory.
         """
-
         self.working_dir = tempfile.mkdtemp(prefix='plumbium_{0}_'.format(self.name))
         for i in self.inputs:
             if not issubclass(type(i), plumbium.artefacts.Artefact):
@@ -135,18 +126,18 @@ class Pipeline(object):
         Args:
             process (:class:`plumbium.processresult.ProcessOutput`): The new result.
         """
-
         self.processes.append(process)
 
     def save(self, exception=None, report_name='report.json'):
-        """Create a JSON file with information about the pipeline then save it
+        """Save a record of the pipeline execution.
+
+        Creates a JSON file with information about the pipeline then saves it
         to a gzipped tar file along with all files used in the pipeline.
 
         Keyword args:
             exception (:class:`exceptions.Exception` or `None`): The exception which caused the
                 pipeline run to fail
         """
-
         report = {
             'name': self.name,
             'environment': plumbium.environment.get_environment(),
@@ -192,7 +183,6 @@ class Pipeline(object):
             returns the first available `directory/basename-xx.ext` where x is
             a counter from 01.
         """
-
         tgt = os.path.join(directory, basename + ext)
         if os.path.exists(tgt):
             inc = 1
@@ -208,7 +198,9 @@ pipeline = Pipeline()
 
 class OutputRecorder(object):
     """Holds commands used via the call function and their resulting output."""
+
     def __init__(self):
+        """Initialize and clear the recorder."""
         self.reset()
 
     def reset(self):
@@ -221,8 +213,7 @@ _output_recorder = OutputRecorder()
 
 
 def call(cmd, cwd=None, shell=False):
-    """Function used to execute scripts and applications in a pipeline with
-    output captured.
+    """Execute scripts and applications in a pipeline with output capturing.
 
     Args:
         cmd (list): List containing the program to be called and any arguments
@@ -233,7 +224,6 @@ def call(cmd, cwd=None, shell=False):
     Returns:
         str: The output from the called command on stdout and stderr.
     """
-
     output = None
     try:
         _output_recorder.commands.append(cmd)
@@ -304,6 +294,7 @@ class ProcessOutput(Mapping):
 
     def __init__(self, func, args, kwargs, commands, output, exception, started, finished,
                  **output_images):
+        """Initialize the record."""
         self._results = output_images
         self.commands = commands
         self.output = output
@@ -325,7 +316,6 @@ class ProcessOutput(Mapping):
 
     def as_dict(self):
         """Serialize this output as a ``dict``."""
-
         d = {
             'function': self.function.__name__,
             'input_args': [repr(x) for x in self.input_args],
@@ -341,10 +331,13 @@ class ProcessOutput(Mapping):
         return d
 
     def __getitem__(self, key):
+        """Get the item corresponding to ``key`` in the ``_results`` dictionary."""
         return self._results.__getitem__(key)
 
     def __len__(self):
+        """Get the length of the ``_results`` dictionary."""
         return self._results.__len__()
 
     def __iter__(self):
+        """Get an iterable over the keys in the ``_results`` dictionary."""
         return self._results.__iter__()
