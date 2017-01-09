@@ -1,14 +1,19 @@
-from setuptools import setup
+import os.path
+from setuptools import find_packages, setup
+
+version = open(os.path.join('plumbium', 'VERSION')).read().strip()
 
 
 def readme():
     with open('README.rst') as f:
         return f.read()
 
+
 setup(
     name='plumbium',
-    version='0.9.1',
-    packages=['plumbium', 'plumbium.recorders'],
+    version=version,
+    packages=find_packages(exclude=['tests']),
+    include_package_data=True,
     zip_safe=True,
     author='Jon Stutters',
     author_email='j.stutters@ucl.ac.uk',
