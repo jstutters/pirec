@@ -44,3 +44,22 @@ def test_NiiGzImage_bad_extension():
 def test_TextFile_bad_extension():
     with pytest.raises(ValueError):
         img = artefacts.NiiGzImage('foo.txx', exists=False)
+
+
+def test_exists(tmpdir):
+    f = tmpdir.join('foo.txt')
+    f.write('foo')
+    filename = str(f)
+    art = artefacts.Artefact(filename, '.txt')
+
+
+def test_not_exists(tmpdir):
+    f = tmpdir.join('foo.txt')
+    filename = str(f)
+    with pytest.raises(IOError):
+        art = artefacts.Artefact(filename, '.txt')
+
+
+def test_not_exists_ok(tmpdir):
+    filename = str(tmpdir.join('foo.txt'))
+    art = artefacts.Artefact(filename, '.txt', exists=False)
