@@ -1,6 +1,6 @@
 from __future__ import print_function
 import pytest
-from plumbium.processresult import record, pipeline, call
+from pirec.processresult import record, pipeline, call
 
 
 class DummyRecorder(object):

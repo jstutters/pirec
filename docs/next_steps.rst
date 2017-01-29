@@ -43,7 +43,7 @@ Output file naming
 By default the results of an analysis run are saved as
 ``'[analysis_name]-[start date]_[start_time].tar.gz'``.  This behaviour can be
 changed by adding the ``filename`` keyword to your :func:`pipeline.run
-<plumbium.processresult.Pipeline.run>` call.
+<pirec.processresult.Pipeline.run>` call.
 
 .. code:: python
 
@@ -59,19 +59,19 @@ The filename argument should be given as a string using Python's `format string
 syntax <https://docs.python.org/2/library/string.html#format-string-syntax>`_.
 When the file is saved the fields in this string will be replaced using the
 results structure - the layout of this structure can be seen by inspecting the
-JSON file that Plumbium produces.
+JSON file that pirec produces.
 
 
 Recording results
 -----------------
 
-In addition to archiving analysis results to a file Plumbium can record
+In addition to archiving analysis results to a file pirec can record
 analysis outcomes to a number of other destinations.
 
 CSV file
 ++++++++
 
-The :class:`CSVFile <plumbium.recorders.csvfile.CSVFile>` recorder outputs selected
+The :class:`CSVFile <pirec.recorders.csvfile.CSVFile>` recorder outputs selected
 fields from the results structure to a CSV file (which will be created or
 appended to as appropriate).  To use CSVFile first create an instance of the class.
 
@@ -97,7 +97,7 @@ SQL database
 
 To record to any SQL database supported by `SQLAlchemy
 <http://www.sqlalchemy.org/>`_ use the :class:`SQLDatabase
-<plumbium.recorders.sqldatabase.SQLDatabase>` class.
+<pirec.recorders.sqldatabase.SQLDatabase>` class.
 
 .. code:: python
 
@@ -113,18 +113,18 @@ To record to any SQL database supported by `SQLAlchemy
 The first argument should be a database URL in a `form recognised by SQLAlchemy
 <http://docs.sqlalchemy.org/en/rel_1_0/core/engines.html>`_, the second
 argument is the name of the database table to insert the new result into (this
-table must exist - Plumbium won't try to create it), the last argument is a
+table must exist - pirec won't try to create it), the last argument is a
 dictionary of column names and functions to output values as described above.
 
 MongoDB
 +++++++
 
-Plumbium can save the complete JSON result structure to a MongoDB server using
-the :class:`MongoDB <plumbium.recorders.mongodb.MongoDB>` class.
+pirec can save the complete JSON result structure to a MongoDB server using
+the :class:`MongoDB <pirec.recorders.mongodb.MongoDB>` class.
 
 .. code:: python
 
-    mongodb = MongoDB('mongodb://localhost:27017/', 'plumbium', 'results')
+    mongodb = MongoDB('mongodb://localhost:27017/', 'pirec', 'results')
 
 The first arugment is a MongoDB URL (see the `PyMongo tutorial
 <https://api.mongodb.org/python/current/tutorial.html>`_ for details).  The
@@ -154,6 +154,6 @@ The first argument is the Webhook URL, the second is the channel to post to
 (the channel name should include the preceding #).  The example shown will send
 a message like the following to Slack upon completion:
 
-    | Plumbium task complete
+    | pirec task complete
     | start date: 20160101 11:59
     | data_val: 55

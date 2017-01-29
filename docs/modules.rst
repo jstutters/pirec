@@ -1,22 +1,22 @@
 Modules
 *******
 
-.. automodule:: plumbium
-.. automodule:: plumbium.processresult
+.. automodule:: pirec
+.. automodule:: pirec.processresult
     :members:
-.. automodule:: plumbium.artefacts
+.. automodule:: pirec.artefacts
     :members:
-.. automodule:: plumbium.environment
+.. automodule:: pirec.environment
     :members:
-.. automodule:: plumbium.recorders
+.. automodule:: pirec.recorders
     :members:
-.. automodule:: plumbium.recorders.csvfile
+.. automodule:: pirec.recorders.csvfile
     :members:
-.. automodule:: plumbium.recorders.mongodb
+.. automodule:: pirec.recorders.mongodb
     :members:
-.. automodule:: plumbium.recorders.slack
+.. automodule:: pirec.recorders.slack
     :members:
-.. automodule:: plumbium.recorders.sqldatabase
+.. automodule:: pirec.recorders.sqldatabase
     :members:
-.. automodule:: plumbium.recorders.stdout
+.. automodule:: pirec.recorders.stdout
     :members:

@@ -1,6 +1,6 @@
 import pytest
-from plumbium.processresult import record, pipeline, call
-from plumbium.recorders import CSVFile, StdOut
+from pirec.processresult import record, pipeline, call
+from pirec.recorders import CSVFile, StdOut
 from collections import OrderedDict
 
 

@@ -1,12 +1,12 @@
-.. Plumbium documentation master file, created by
+.. Pirec documentation master file, created by
    sphinx-quickstart on Tue Apr 12 21:27:58 2016.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Plumbium's documentation!
+Welcome to Pirec's documentation!
 ####################################
 
-Plumbium is a Python package for wrapping scripts so that their inputs and
+Pirec is a Python package for wrapping scripts so that their inputs and
 outputs are preserved in a consistent way and results are recorded.
 
 
@@ -33,11 +33,11 @@ Does your directory listing look like this?
     -rw-rw-r--. 1 jstutters staff 0 Apr 15 10:36 subject1_t1_dont_change.nii.gz
 
 
-When an analysis is run with Plumbium all the input files are copied to a
+When an analysis is run with Pirec all the input files are copied to a
 temporary directory in which the analysis is run.  When the analysis has
 finished all the files created are collected into an archive and saved along
 with all the printed outputs from the analysis stages and any exceptions that
-occurred.  Plumbium can also record results to a database or spreadsheet.  To
+occurred.  Pirec can also record results to a database or spreadsheet.  To
 find out more, read the :doc:`tutorial <tutorial>` or dive into the :ref:`API
 documentation <modindex>`.
 
@@ -47,8 +47,8 @@ Example
 
 .. code:: python
 
-    from plumbium import call, record, pipeline
-    from plumbium.artefacts import TextFile
+    from pirec import call, record, pipeline
+    from pirec.artefacts import TextFile
 
 
     @record()

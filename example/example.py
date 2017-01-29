@@ -1,7 +1,7 @@
 from collections import OrderedDict
 import sys
-from plumbium import call, record, pipeline
-from plumbium.recorders import CSVFile
+from pirec import call, record, pipeline
+from pirec.recorders import CSVFile
 
 
 @record()

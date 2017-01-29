@@ -1,4 +1,4 @@
-"""Main plumbium module containing the Pipeline class and function recording methods."""
+"""Main pirec module containing the Pipeline class and function recording methods."""
 
 # pylint: disable=attribute-defined-outside-init
 
@@ -14,8 +14,8 @@ import tarfile
 import tempfile
 import traceback
 import wrapt
-import plumbium.environment
-import plumbium.artefacts
+import pirec.environment
+import pirec.artefacts
 
 
 class Pipeline(object):
@@ -101,12 +101,12 @@ class Pipeline(object):
         """Copy any input files to working directory.
 
         If an input argument is a subclass of
-        :class:`plumbium.artefacts.Artefact` copy the file it refers to into
+        :class:`pirec.artefacts.Artefact` copy the file it refers to into
         the working directory.
         """
-        self.working_dir = tempfile.mkdtemp(prefix='plumbium_{0}_'.format(self.name))
+        self.working_dir = tempfile.mkdtemp(prefix='pirec_{0}_'.format(self.name))
         for i in self.inputs:
-            if not issubclass(type(i), plumbium.artefacts.Artefact):
+            if not issubclass(type(i), pirec.artefacts.Artefact):
                 continue
             dest_dir = os.path.join(self.working_dir, os.path.dirname(i.filename))
             source = os.path.join(self.base_dir, i.filename)
@@ -124,7 +124,7 @@ class Pipeline(object):
         """Record a process in this pipeline.
 
         Args:
-            process (:class:`plumbium.processresult.ProcessOutput`): The new result.
+            process (:class:`pirec.processresult.ProcessOutput`): The new result.
         """
         self.processes.append(process)
 
@@ -140,7 +140,7 @@ class Pipeline(object):
         """
         report = {
             'name': self.name,
-            'environment': plumbium.environment.get_environment(),
+            'environment': pirec.environment.get_environment(),
             'inputs': [repr(f) for f in self.inputs],
             'dir': self.base_dir,
             'start_date': self.start_date.strftime('%Y%m%d %H:%M'),
@@ -289,7 +289,7 @@ class ProcessOutput(Mapping):
             running the stage if applicable.
         started (:class:`datetime.datetime`): When the stage was started.
         finished (:class:`datetime.datetime`): When the stage finished executing.
-        **output_images (:class:`plumbium.artefacts.Artefact`): Images produced by the stage.
+        **output_images (:class:`pirec.artefacts.Artefact`): Images produced by the stage.
     """
 
     def __init__(self, func, args, kwargs, commands, output, exception, started, finished,

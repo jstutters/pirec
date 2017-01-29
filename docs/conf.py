@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Plumbium documentation build configuration file, created by
+# Pirec documentation build configuration file, created by
 # sphinx-quickstart on Tue Apr 12 21:27:58 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -14,7 +14,7 @@
 
 import sys
 import os
-import plumbium
+import pirec
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Plumbium'
+project = u'Pirec'
 copyright = u'2017, Jon Stutters'
 author = u'Jon Stutters'
 
@@ -58,7 +58,7 @@ author = u'Jon Stutters'
 # built documents.
 #
 # The short X.Y version.
-version = plumbium.__version__
+version = pirec.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -124,7 +124,7 @@ html_theme = 'sphinx_rtd_theme'
 
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
-#html_title = u'Plumbium v0.6.1'
+#html_title = u'Pirec v0.6.1'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -206,7 +206,7 @@ html_theme = 'sphinx_rtd_theme'
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Plumbiumdoc'
+htmlhelp_basename = 'Pirecdoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -228,7 +228,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Plumbium.tex', u'Plumbium Documentation',
+    (master_doc, 'Pirec.tex', u'Pirec Documentation',
      u'Jon Stutters', 'manual'),
 ]
 
@@ -258,7 +258,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'plumbium', u'Plumbium Documentation',
+    (master_doc, 'pirec', u'Pirec Documentation',
      [author], 1)
 ]
 
@@ -272,8 +272,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Plumbium', u'Plumbium Documentation',
-     author, 'Plumbium', 'One line description of project.',
+    (master_doc, 'Pirec', u'Pirec Documentation',
+     author, 'Pirec', 'Pipeline recorder.',
      'Miscellaneous'),
 ]
 

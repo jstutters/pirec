@@ -4,16 +4,16 @@ Tutorial
 Imports
 -------
 
-To use Plumbium you should start by importing the :func:`call
-<plumbium.processresult.call>` function, :func:`record <plumbium.processresult.record>`
-decorator, :class:`pipeline <plumbium.processresult.Pipeline>` instance and 
-any :mod:`plumbium.artefacts` you need.  Artefacts are classes representing the
+To use Pirec you should start by importing the :func:`call
+<pirec.processresult.call>` function, :func:`record <pirec.processresult.record>`
+decorator, :class:`pipeline <pirec.processresult.Pipeline>` instance and 
+any :mod:`pirec.artefacts` you need.  Artefacts are classes representing the
 data files used by your pipeline e.g. text files and images.
 
 .. code:: python
 
-    from plumbium import call, record, pipeline
-    from plumbium.artefacts import TextFile
+    from pirec import call, record, pipeline
+    from pirec.artefacts import TextFile
 
 
 Processing stages
@@ -22,11 +22,11 @@ Processing stages
 Next, define the stages of your analysis to be recorded.  For this example
 we'll concatenate two files in the first stage and then count the words of the
 resulting file in the second stage.  The :func:`record
-<plumbium.processresult.record>` decorator indicates that the function should
+<pirec.processresult.record>` decorator indicates that the function should
 be recorded.  The list of arguments to record is used to name the return values
 from the function - the number of arguments to record should match the number
 of variables returned the the function.  Calls to external programs should be
-made using :func:`call <plumbium.processresult.call>` so that printed output
+made using :func:`call <pirec.processresult.call>` so that printed output
 can be captured.
 
 .. code:: python
@@ -50,8 +50,8 @@ The complete pipeline
 ---------------------
 
 Now to use our stages to define the whole pipeline.  Functions decorated with
-:func:`record <plumbium.processresult.record>` return an instance of
-:class:`ProcessOutput <plumbium.processresult.ProcessOutput>`, the outputs from
+:func:`record <pirec.processresult.record>` return an instance of
+:class:`ProcessOutput <pirec.processresult.ProcessOutput>`, the outputs from
 the function can be accessed using a dict-like method.
 
 .. code:: python
@@ -65,7 +65,7 @@ the function can be accessed using a dict-like method.
 Running the pipeline
 --------------------
 
-Finally we use :func:`pipeline.run <plumbium.processresult.Pipeline.run>` to
+Finally we use :func:`pipeline.run <pirec.processresult.Pipeline.run>` to
 execute the pipeline.
 
 .. code:: python

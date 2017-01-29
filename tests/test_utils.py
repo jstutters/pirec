@@ -1,4 +1,4 @@
-from plumbium import utils
+from pirec import utils
 
 
 def test_file_sha1sum(tmpdir):

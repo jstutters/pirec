@@ -1,4 +1,4 @@
-PROJECT := plumbium
+PROJECT := pirec
 
 .PHONY: checks test docstyle codestyle lint
 

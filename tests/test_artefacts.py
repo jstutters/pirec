@@ -1,5 +1,5 @@
 import pytest
-from plumbium import artefacts
+from pirec import artefacts
 
 
 def test_Artefact_basename():

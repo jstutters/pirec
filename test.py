@@ -1,4 +1,4 @@
-from plumbium import processresult
+from pirec import processresult
 
 
 @processresult.record_process('f')
