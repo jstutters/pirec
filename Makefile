@@ -5,7 +5,7 @@ PROJECT := pirec
 checks: test docstyle codestyle lint
 
 test:
-	py.test --cov
+	pytest --cov
 
 docstyle:
 	pydocstyle $(PROJECT)
