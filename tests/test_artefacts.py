@@ -48,11 +48,6 @@ def test_NiiGzImage_bad_extension():
         img = artefacts.NiiGzImage('foo.nii.gx', exists=False)
 
 
-def test_TextFile_bad_extension():
-    with pytest.raises(ValueError):
-        img = artefacts.NiiGzImage('foo.txx', exists=False)
-
-
 def test_exists(tmpdir):
     """If the file is present and exists=True __init__ should work."""
     f = tmpdir.join('foo.txt')
