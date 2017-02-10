@@ -21,6 +21,11 @@ import pirec.artefacts
 class Pipeline(object):
     """Main class managing the recording of a processing pipeline."""
 
+    def __init__(self):
+        """Initialize members that are referenced by call()."""
+        self.processes = []
+        self.results = {}
+
     def run(self, name, pipeline_func, base_dir, *inputs, **kwargs):
         """Execute a function as a recorded pipeline.
 
