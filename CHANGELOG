@@ -1,4 +1,10 @@
 # CHANGELOG
+## [0.10.1] - 2017-03-07
+### Changed
+- pytest is now used instead of py.test where applicable
+- Functions decorated with @record can now be used outside a pipeline
+
+
 ## [0.10.0] - 2017-01-09
 ### Added
 - Artefacts will now check whether their file exists on initialization and
