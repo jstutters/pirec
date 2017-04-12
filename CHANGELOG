@@ -1,8 +1,14 @@
 # CHANGELOG
+## [0.10.2] - 2017-04-12
+### Added
+- The SQLDatabase recorder can now store the entire result dictionary to e.g. a
+  JSONB column in a PostgreSQL database.
+
+
 ## [0.10.1] - 2017-03-07
 ### Changed
-- pytest is now used instead of py.test where applicable
-- Functions decorated with @record can now be used outside a pipeline
+- pytest is now used instead of py.test where applicable.
+- Functions decorated with @record can now be used outside a pipeline.
 
 
 ## [0.10.0] - 2017-01-09
@@ -30,7 +36,7 @@
 
 ## [0.7.0] - 2016-11-17
 ### Changed
-- Wheels are now built for Python 2 and 3
+- Wheels are now built for Python 2 and 3.
 - JSON pipeline report is now saved to report.json.  This can be changed by
   supplying the report_name keyword argument to Pipeline.run().  Fixing the name
   makes automated reading data from the report later easier.
@@ -39,45 +45,45 @@
 
 ## [0.6.5] - 2016-11-08
 ### Added
-- Values returned from pipelines are now recorded
+- Values returned from pipelines are now recorded.
 
 
 ## [0.6.4] - 2016-11-02
 ### Added
-- A recorder that sends a message to Slack is now included
-- Multiple recorders may now be used
+- A recorder that sends a message to Slack is now included.
+- Multiple recorders may now be used.
 
 ### Changed
-- Printed output from commands is now stripped of whitespace before recording
+- Printed output from commands is now stripped of whitespace before recording.
 
 
 ## [0.6.3] - 2016-10-26
 ### Added
-- The command argument to call() is now recorded along with the output
+- The command argument to call() is now recorded along with the output.
 
 
 ## [0.6.2] - 2016-09-22
 ### Added
-- The pipeline record now includes information about the executing environment
-- Pipelines can now accept input arguments that are not subclasses of artefacts.Artefact
+- The pipeline record now includes information about the executing environment.
+- Pipelines can now accept input arguments that are not subclasses of artefacts.Artefact.
 
 ### Changed
-- Fix docstring errors
-- Add more tests
-- Tidy up documentation structure
+- Fix docstring errors.
+- Add more tests.
+- Tidy up documentation structure.
 
 
 ## [0.6.1] - 2016-09-07
 ### Added
-- The call() function now returns process output
+- The call() function now returns process output.
 
 
 ## [0.6.0] - 2016-08-02
 ### Changed
-- Use wrapt for the @record decorator
-- Improve documentation
+- Use wrapt for the @record decorator.
+- Improve documentation.
 
 
 ## [0.5.0] - 2016-04-27
 
-Initial public release
+Initial public release.
