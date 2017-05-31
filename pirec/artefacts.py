@@ -45,7 +45,7 @@ class Artefact(object):
 
     @property
     def basename(self):
-        """The filename without the extension and directory components.
+        """The filename without the extension.
 
         .. code:: python
 
