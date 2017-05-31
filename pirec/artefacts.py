@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 import os.path
+import tempfile
 from .utils import file_sha1sum
 
 
@@ -131,3 +132,17 @@ class TextFile(Artefact):
 
     def __repr__(self):
         return '{0}({1!r})'.format(self.__class__.__name__, self.filename)
+
+
+def get_targz_artefact(archive_filename, filename, artefact_cls):
+    """Get an artefact from a ``.tar.gz`` file.
+
+    Args:
+        archive_name (str): The filename of the container.
+        filename (str): The filename of the artefact.
+        artefact_cls (Artefact): The class of the artefact.
+    """
+
+    with tarfile.open(archive_filename, 'r:gz') as tf:
+        tf.extract(filename)
+    return artefact_cls(os.path.join(os.getcwd(), filename)
