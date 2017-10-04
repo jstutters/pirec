@@ -108,6 +108,7 @@ class NiiGzImage(Artefact):
     Keyword args:
         exists (boolean): If true raise an exception if the file does not exist.
     """
+
     extension = '.nii.gz'
 
     def __init__(self, filename, exists=True):
@@ -127,6 +128,7 @@ class TextFile(Artefact):
     Keyword args:
         exists (boolean): If true raise an exception if the file does not exist.
     """
+
     extension = '.txt'
 
     def __init__(self, filename, exists=True):
@@ -145,7 +147,6 @@ def get_targz_artefact(archive_filename, filename, artefact_cls, strip_dirname=T
         filename (str): The filename of the artefact.
         artefact_cls (Artefact): The class of the artefact.
     """
-
     dirname = os.path.basename(archive_filename)[0:-7]
     temp_file_handle, temp_name = tempfile.mkstemp(suffix=artefact_cls.extension)
     with tarfile.open(archive_filename, 'r:gz') as tf:

@@ -113,8 +113,14 @@ class Pipeline(object):
         for i in self.inputs:
             if not issubclass(type(i), pirec.artefacts.Artefact):
                 continue
-            dest_dir = os.path.join(self.working_dir, os.path.dirname(i.filename))
-            source = os.path.join(self.base_dir, i.filename)
+            if not i.filename.startswith('/'):
+                # path is relative
+                dest_dir = os.path.join(self.working_dir, os.path.dirname(i.filename))
+                source = os.path.join(self.base_dir, i.filename)
+            else:
+                # path is absolute
+                dest_dir = os.path.join(self.working_dir)
+                source = i.filename
             if not os.path.exists(dest_dir):
                 os.makedirs(dest_dir)
             shutil.copy(source, dest_dir)
