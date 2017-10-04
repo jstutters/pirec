@@ -1,6 +1,9 @@
 from __future__ import print_function
+import os
+import tarfile
 import pytest
 from pirec.processresult import record, pipeline, call
+import pirec.artefacts as artefacts
 
 
 class DummyRecorder(object):
@@ -85,6 +88,19 @@ def multiple_cmd_pipeline():
 
     def a_pipeline():
         recorded_function('a')
+
+    return a_pipeline
+
+
+@pytest.fixture
+def cat_pipeline():
+    @record('cat_output')
+    def recorded_function(x):
+        return call(['cat', x.filename]).decode('utf-8')
+
+    def a_pipeline(x):
+        func_result = recorded_function(x)
+        return (func_result['cat_output'],)
 
     return a_pipeline
 
@@ -176,3 +192,21 @@ def test_save_filename(simple_pipeline, tmpdir):
             filename='result_file_{metadata[test]:03d}'
         )
         assert 'result_file_001.tar.gz' in [f.basename for f in tmpdir.listdir()]
+
+
+def test_targz_artefact_pipeline(cat_pipeline, tmpdir):
+    with tmpdir.as_cwd():
+        with open('/tmp/foo.txt', 'w') as uncompressed_file:
+            uncompressed_file.write('foo')
+        tar_filename = '/tmp/foo.tar.gz'
+        with tarfile.open(tar_filename, 'w:gz') as tf:
+            tf.add('/tmp/foo.txt', arcname='foo/foo.txt')
+        os.remove('/tmp/foo.txt')
+        pipeline.run(
+            'test',
+            cat_pipeline,
+            str(tmpdir),
+            artefacts.get_targz_artefact('/tmp/foo.tar.gz', 'foo.txt', artefacts.TextFile)
+        )
+        print(pipeline.results)
+        assert pipeline.results['0'] == 'foo'
