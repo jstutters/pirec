@@ -155,6 +155,6 @@ def get_targz_artefact(archive_filename, filename, artefact_cls, strip_dirname=T
             member_name = filename
         target_member = tf.getmember(member_name)
         extracted_file = tf.extractfile(target_member)
-        with open(temp_file_handle, 'wb') as temp_file:
+        with os.fdopen(temp_file_handle, 'wb') as temp_file:
             temp_file.write(extracted_file.read())
     return artefact_cls(temp_name)
