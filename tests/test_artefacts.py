@@ -1,3 +1,5 @@
+import os
+import tarfile
 import pytest
 from pirec import artefacts
 
@@ -68,3 +70,31 @@ def test_not_exists_ok(tmpdir):
     """If the file is not present and exists=False __init__ should work."""
     filename = str(tmpdir.join('foo.txt'))
     art = artefacts.Artefact(filename, '.txt', exists=False)
+
+
+def test_get_targz_artefact(tmpdir):
+    uncompressed_file = tmpdir.join('foo.txt')
+    uncompressed_file.write('foo')
+    tar_filename = str(tmpdir.join('foo.tar.gz'))
+    with tarfile.open(tar_filename, 'w:gz') as tf:
+        tf.add(str(uncompressed_file), arcname='foo/foo.txt')
+    art = artefacts.get_targz_artefact(tar_filename, 'foo.txt', artefacts.TextFile)
+    assert art.filename.endswith('.txt')
+    assert art.filename.startswith('/tmp')
+    assert open(art.filename, 'r').read() == 'foo'
+    os.remove(art.filename)
+
+
+def test_get_targz_artefact_without_strip(tmpdir):
+    uncompressed_file = tmpdir.join('foo.txt')
+    uncompressed_file.write('foo')
+    tar_filename = str(tmpdir.join('foo.tar.gz'))
+    with tarfile.open(tar_filename, 'w:gz') as tf:
+        tf.add(str(uncompressed_file), arcname='foo.txt')
+    art = artefacts.get_targz_artefact(
+        tar_filename, 'foo.txt', artefacts.TextFile, strip_dirname=False
+    )
+    assert art.filename.endswith('.txt')
+    assert art.filename.startswith('/tmp')
+    assert open(art.filename, 'r').read() == 'foo'
+    os.remove(art.filename)
