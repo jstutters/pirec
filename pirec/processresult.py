@@ -74,7 +74,7 @@ class Pipeline(object):
             pipeline_return = pipeline_func(*inputs)
         except Exception as e:
             if sentry is not None:
-                client.captureException()
+                sentry.captureException()
             pipeline_exception = e
             traceback.print_exc()
         finally:
