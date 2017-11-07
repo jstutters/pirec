@@ -5,6 +5,8 @@
   artefact classes must expose a variable named extension (see the code for artefacts.Textfile for
   an example.
 
+- pipeline.run() now optionally accepts a Sentry.IO client that will be used to log exceptions.
+
 
 ## [0.10.2] - 2017-04-12
 ### Added
