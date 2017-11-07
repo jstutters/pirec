@@ -1,7 +1,9 @@
 """Module containing the :class:`pirec.artefacts.Artefact` base class and subclasses."""
 
 from __future__ import absolute_import
-import os.path
+import os
+import tarfile
+import tempfile
 from .utils import file_sha1sum
 
 
@@ -45,7 +47,7 @@ class Artefact(object):
 
     @property
     def basename(self):
-        """The filename without the extension and directory components.
+        """The filename without the extension.
 
         .. code:: python
 
@@ -107,9 +109,11 @@ class NiiGzImage(Artefact):
         exists (boolean): If true raise an exception if the file does not exist.
     """
 
+    extension = '.nii.gz'
+
     def __init__(self, filename, exists=True):
         """Initialize the artefact."""
-        super(NiiGzImage, self).__init__(filename, '.nii.gz', exists)
+        super(NiiGzImage, self).__init__(filename, self.extension, exists)
 
     def __repr__(self):
         return '{0}({1!r})'.format(self.__class__.__name__, self.filename)
@@ -125,9 +129,33 @@ class TextFile(Artefact):
         exists (boolean): If true raise an exception if the file does not exist.
     """
 
+    extension = '.txt'
+
     def __init__(self, filename, exists=True):
         """Initialize the artefact."""
-        super(TextFile, self).__init__(filename, '.txt', exists=True)
+        super(TextFile, self).__init__(filename, self.extension, exists=True)
 
     def __repr__(self):
         return '{0}({1!r})'.format(self.__class__.__name__, self.filename)
+
+
+def get_targz_artefact(archive_filename, filename, artefact_cls, strip_dirname=True):
+    """Get an artefact from a ``.tar.gz`` file.
+
+    Args:
+        archive_name (str): The filename of the container.
+        filename (str): The filename of the artefact.
+        artefact_cls (Artefact): The class of the artefact.
+    """
+    dirname = os.path.basename(archive_filename)[0:-7]
+    temp_file_handle, temp_name = tempfile.mkstemp(suffix=artefact_cls.extension)
+    with tarfile.open(archive_filename, 'r:gz') as tf:
+        if strip_dirname:
+            member_name = os.path.join(dirname, filename)
+        else:
+            member_name = filename
+        target_member = tf.getmember(member_name)
+        extracted_file = tf.extractfile(target_member)
+        with os.fdopen(temp_file_handle, 'wb') as temp_file:
+            temp_file.write(extracted_file.read())
+    return artefact_cls(temp_name)

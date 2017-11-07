@@ -45,6 +45,7 @@ class Pipeline(object):
             result_names (str): An iterable of strings containing the names for any values
                 returned by the pipeline.
             report_name (str): Filename for the JSON report (default: `report.json`).
+            sentry (raven.Client): A Sentry.IO client.
         """
         self.processes = []
         self.debug = kwargs.get('debug', False)
@@ -60,12 +61,20 @@ class Pipeline(object):
         self.launched_dir = os.getcwd()
         self._copy_input_files_to_work_dir()
         self.start_date = datetime.datetime.now()
+        sentry = kwargs.get('sentry', None)
+        if sentry is not None:
+            sentry.user_context({
+                'pipeline_name': self.name,
+                'metadata': self.metadata
+            })
         os.chdir(self.working_dir)
         pipeline_exception = None
         pipeline_return = None
         try:
             pipeline_return = pipeline_func(*inputs)
         except Exception as e:
+            if sentry is not None:
+                sentry.captureException()
             pipeline_exception = e
             traceback.print_exc()
         finally:
@@ -113,8 +122,14 @@ class Pipeline(object):
         for i in self.inputs:
             if not issubclass(type(i), pirec.artefacts.Artefact):
                 continue
-            dest_dir = os.path.join(self.working_dir, os.path.dirname(i.filename))
-            source = os.path.join(self.base_dir, i.filename)
+            if not i.filename.startswith('/'):
+                # path is relative
+                dest_dir = os.path.join(self.working_dir, os.path.dirname(i.filename))
+                source = os.path.join(self.base_dir, i.filename)
+            else:
+                # path is absolute
+                dest_dir = os.path.join(self.working_dir)
+                source = i.filename
             if not os.path.exists(dest_dir):
                 os.makedirs(dest_dir)
             shutil.copy(source, dest_dir)
