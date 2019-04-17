@@ -46,7 +46,6 @@ pep8==1.7.1
 pexpect==4.6.0
 pickleshare==0.7.5
 -e git+git@github.com:jstutters/pirec.git@ff010f01d21cd3394b8a049b809659f21fb42c71#egg=pirec
--e git+git@github.com:jstutters/pirec-extras.git@5f78deda6fee23511386a17af511c65782774e6c#egg=pirec_extras
 pkginfo==1.4.2
 pluggy==0.8.0
 pockets==0.7.2
