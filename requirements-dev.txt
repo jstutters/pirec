@@ -63,7 +63,7 @@ pytest==3.10.1
 pytest-cov==2.6.0
 pytest-mock==1.6.0
 pytz==2018.7
-PyYAML==5.1
+PyYAML==5.4
 readme-renderer==24.0
 requests==2.21.0
 requests-toolbelt==0.8.0
