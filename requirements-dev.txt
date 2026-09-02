@@ -57,7 +57,7 @@ pydocstyle==1.1.1
 pyflakes==2.0.0
 Pygments==2.20.0
 pylint==2.3.1
-pymongo==3.7.2
+pymongo==4.6.3
 pyparsing==2.3.0
 pytest==9.0.3
 pytest-cov==2.6.0
